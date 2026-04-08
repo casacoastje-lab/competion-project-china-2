@@ -3,14 +3,18 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { getDictionary } from '@/lib/dictionary';
 
-export default async function Dashboard({ params }: { params: Promise<{ lang: string }> }) {
+interface PageProps {
+  params: Promise<{ lang: string }>;
+}
+
+export default async function Dashboard({ params }: PageProps) {
   const { lang } = await params;
   const isEn = lang === 'en';
   const supabase = await createClient();
   
-  const { data: { user }, error } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
   
-  if (error || !user) {
+  if (!user) {
     redirect(`/${lang}/login`);
   }
 
@@ -20,176 +24,374 @@ export default async function Dashboard({ params }: { params: Promise<{ lang: st
     .eq('id', user.id)
     .single();
 
-  const dict = await getDictionary(lang as 'en' | 'zh');
   const isAdmin = profile?.role === 'admin';
+  const isBlogger = profile?.role === 'blogger' || isAdmin;
 
-  const stats = [
-    { icon: 'Bookmark', label: isEn ? 'Relics Saved' : '收藏遗迹', value: '12' },
-    { icon: 'GraduationCap', label: isEn ? 'Mastery Units' : '掌握课程', value: '5' },
-    { icon: 'MapPin', label: isEn ? 'Provinces Visited' : '到访省份', value: '8' },
-    { icon: 'Award', label: isEn ? 'Honor Rank' : '荣誉等级', value: isAdmin ? 'Admin' : '3' },
-  ];
+  const { data: stats } = await supabase.rpc('get_user_stats', { user_id: user.id });
 
-  const recentActivity = [
-    { title: isEn ? 'The Great Wall: Imperial Defense' : '长城：帝国防线', time: isEn ? '2 hours ago' : '2小时前', type: 'blog' },
-    { title: isEn ? 'Mandarin Basics: Tones' : '普通话基础：声调', time: isEn ? 'Yesterday' : '昨天', type: 'lesson' },
-    { title: isEn ? 'Forbidden City' : '故宫博物院', time: isEn ? '3 days ago' : '3天前', type: 'landmark' },
-  ];
+  const { data: recentActivity } = await supabase
+    .from('activity_log')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(10);
 
-  const dailyWisdom = isEn 
-    ? { quote: "Under heaven all can see beauty as beauty only because there is ugliness.", source: "Lao Tzu, Tao Te Ching" }
-    : { quote: "天下皆知美之为美，斯恶已；皆知善之为善，斯不善已。", source: "《道德经》· 老子" };
+  const { data: bookmarks } = await supabase
+    .from('bookmarks')
+    .select('*, posts:post_id(title_en, title_zh, cover_image_url)')
+    .eq('user_id', user.id)
+    .limit(3);
+
+  const { data: userBadges } = await supabase
+    .from('user_badges')
+    .select('*, badges:badge_id(name, icon_url)')
+    .eq('user_id', user.id);
+
+  const { data: myPosts } = isBlogger ? await supabase
+    .from('posts')
+    .select('id, title_en, title_zh, view_count, published_at')
+    .eq('author_id', user.id)
+    .order('view_count', { ascending: false })
+    .limit(5) : { data: null };
+
+  const getActivityIcon = (actionType: string) => {
+    const icons: Record<string, string> = {
+      login: 'login',
+      logout: 'logout',
+      view_post: 'visibility',
+      view_landmark: 'location_on',
+      view_lesson: 'school',
+      bookmark_post: 'bookmark',
+      like_post: 'favorite',
+      comment_post: 'comment',
+      complete_lesson: 'check_circle',
+      earn_badge: 'workspace_premium',
+      create_post: 'edit',
+      update_profile: 'manage_accounts'
+    };
+    return icons[actionType] || 'circle';
+  };
+
+  const getActivityColor = (actionType: string) => {
+    const colors: Record<string, string> = {
+      login: 'bg-secondary-container',
+      logout: 'bg-surface-container-highest',
+      view_post: 'bg-primary-fixed',
+      earn_badge: 'bg-tertiary-fixed',
+      create_post: 'bg-secondary-container',
+      default: 'bg-surface-container-highest'
+    };
+    return colors[actionType] || colors.default;
+  };
+
+  const formatTimeAgo = (date: string) => {
+    const now = new Date();
+    const then = new Date(date);
+    const diffMs = now.getTime() - then.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 1) return isEn ? 'Just now' : '刚刚';
+    if (diffMins < 60) return isEn ? `${diffMins}m ago` : `${diffMins}分钟前`;
+    if (diffHours < 24) return isEn ? `${diffHours}h ago` : `${diffHours}小时前`;
+    if (diffDays < 7) return isEn ? `${diffDays}d ago` : `${diffDays}天前`;
+    return then.toLocaleDateString();
+  };
+
+  const getRoleLabel = () => {
+    if (isAdmin) return isEn ? 'Admin' : '管理员';
+    if (isBlogger) return isEn ? 'Blogger' : '博主';
+    return isEn ? 'Reader' : '读者';
+  };
+
+  const userStats = stats?.[0] || {
+    posts_viewed: 0,
+    bookmarks_count: bookmarks?.length || 0,
+    badges_earned: userBadges?.length || 0,
+    posts_created: myPosts?.length || 0
+  };
 
   return (
-    <div className="relative min-h-screen bg-[#FAF8F5] pt-32 pb-32 px-6 md:px-12 overflow-hidden">
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#9e2016]/[0.02] rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+    <div className="min-h-screen bg-surface font-sans">
+      <div className="grain-texture absolute inset-0" />
       
-      <div className="max-w-7xl mx-auto relative z-10">
-        <header className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              {isAdmin && (
-                <div className="px-3 py-1 bg-[#9e2016] rounded-full">
-                  <p className="text-[10px] font-sans font-black uppercase tracking-[0.3em] text-white">
-                    {isEn ? 'Admin' : '管理员'}
-                  </p>
-                </div>
-              )}
-              <div className="px-3 py-1 bg-[#9e2016]/10 rounded-full">
-                <p className="text-[10px] font-sans font-black uppercase tracking-[0.3em] text-[#9e2016]">
-                  {isEn ? 'Archivist Access' : '档案管理员权限'}
-                </p>
-              </div>
-            </div>
-            <h1 className="font-serif text-6xl font-black text-[#1b1c1a] tracking-tight">
-              {isEn ? 'Welcome back, ' : '欢迎回来，'}<span className="text-[#9e2016]/80">{profile?.display_name || profile?.username || user.email?.split('@')[0]}</span>
-            </h1>
-            {isAdmin && (
-              <p className="text-sm text-[#9e2016]/60 font-sans">
-                {isEn ? 'You have full access to the admin panel.' : '您拥有管理员面板的完整访问权限。'}
-              </p>
-            )}
-          </div>
-
-          <div className="flex items-center gap-4">
-            <Link 
-              href={`/${lang}/settings`}
-              className="w-14 h-14 bg-white rounded-full flex items-center justify-center border border-[#1b1c1a]/5 hover:border-[#9e2016]/20 hover:text-[#9e2016] transition-all shadow-sm group"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:rotate-45 transition-transform"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <nav className="bg-[#fef9eb]/80 backdrop-blur-md fixed top-0 w-full z-50 border-b border-tertiary/20">
+        <div className="flex justify-between items-center max-w-7xl mx-auto px-8 py-4">
+          <div className="flex items-center gap-8">
+            <Link href={`/${lang}`} className="text-2xl font-bold text-primary font-serif border-t-2 border-tertiary">
+              ChinaVerse
             </Link>
-            <Link 
-              href={`/${lang}/auth/signout`}
-              className="px-8 py-4 bg-[#1b1c1a] text-white rounded-full font-sans font-black text-[10px] uppercase tracking-[0.2em] hover:bg-[#9e2016] transition-all flex items-center gap-3 shadow-xl"
-            >
-              {isEn ? 'Evoke Exit' : '退出登录'}
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+            <div className="hidden md:flex gap-6">
+              <Link href={`/${lang}`} className="text-on-surface hover:text-primary transition-colors font-serif text-lg">Home</Link>
+              <Link href={`/${lang}/blog`} className="text-on-surface hover:text-primary transition-colors font-serif text-lg">Gallery</Link>
+              <Link href={`/${lang}/landmarks`} className="text-on-surface hover:text-primary transition-colors font-serif text-lg">Map</Link>
+              <Link href={`/${lang}/lessons`} className="text-on-surface hover:text-primary transition-colors font-serif text-lg">Learning</Link>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link href={`/${lang}/dashboard`} className="p-2 hover:bg-primary/5 transition-all text-primary border-b-2 border-primary pb-1 font-bold">
+              <span className="material-symbols-outlined">person</span>
+            </Link>
+            <Link href={`/${lang}/settings`} className="p-2 hover:bg-primary/5 transition-all">
+              <span className="material-symbols-outlined">settings</span>
+            </Link>
+            <Link href={`/${lang}/auth/signout`} className="p-2 hover:bg-primary/5 transition-all">
+              <span className="material-symbols-outlined">logout</span>
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      <main className="relative min-h-screen py-16 px-4 sm:px-8 max-w-7xl mx-auto">
+        <header className="flex flex-col md:flex-row items-center md:items-end gap-8 mb-16">
+          <div className="relative group">
+            <div className="w-32 h-32 bg-primary flex items-center justify-center border-4 border-tertiary-fixed shadow-xl">
+              <span className="text-on-primary text-5xl font-serif font-bold">
+                {profile?.display_name?.[0] || profile?.username?.[0] || user.email?.[0]?.toUpperCase()}
+              </span>
+            </div>
+            <div className="absolute -bottom-2 -right-2 bg-secondary p-1 border-2 border-surface">
+              <span className="material-symbols-outlined text-on-secondary text-sm">verified</span>
+            </div>
+          </div>
+          <div className="text-center md:text-left">
+            <h1 className="text-5xl font-serif font-bold text-on-surface tracking-tight uppercase">
+              {profile?.username || user.email?.split('@')[0]}
+            </h1>
+            <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 text-on-surface-variant font-medium">
+              <span className="flex items-center gap-1">
+                <span className="material-symbols-outlined text-primary text-lg">school</span>
+                {getRoleLabel()}
+              </span>
+              <span className="w-1 h-1 bg-outline-variant rounded-full" />
+              <span className="flex items-center gap-1">
+                <span className="material-symbols-outlined text-secondary text-lg">mail</span>
+                {user.email}
+              </span>
+            </div>
+          </div>
+          <div className="md:ml-auto">
+            <Link href={`/${lang}/settings`} className="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary hover:bg-primary-container transition-colors">
+              <span className="material-symbols-outlined">edit</span>
+              <span className="font-medium">{isEn ? 'Edit Profile' : '编辑资料'}</span>
             </Link>
           </div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
-          <div className="lg:col-span-1 space-y-12">
-            <div className="grid grid-cols-1 gap-6">
-              {stats.map((stat, idx) => (
-                <div key={idx} className="bg-white/40 backdrop-blur-xl border border-white p-8 rounded-[40px] shadow-sm flex items-center gap-6 group hover:translate-x-2 transition-all">
-                  <div className="w-14 h-14 bg-[#9e2016]/5 rounded-2xl flex items-center justify-center group-hover:bg-[#9e2016] group-hover:text-white transition-colors text-[#9e2016]">
-                    {stat.icon === 'Bookmark' && <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>}
-                    {stat.icon === 'GraduationCap' && <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>}
-                    {stat.icon === 'MapPin' && <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>}
-                    {stat.icon === 'Award' && <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>}
-                  </div>
-                  <div>
-                    <p className="text-3xl font-serif font-black text-[#1b1c1a]">{stat.value}</p>
-                    <p className="text-[9px] font-sans font-black text-[#1b1c1a]/30 uppercase tracking-widest">{stat.label}</p>
-                  </div>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+          <div className="md:col-span-4 flex flex-col gap-8">
+            <div className="bg-surface-container-low p-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-tertiary/5 rotate-45 translate-x-12 -translate-y-12" />
+              <h3 className="font-serif text-xs tracking-widest text-tertiary uppercase mb-6">
+                {isEn ? 'Archive Statistics' : '数据统计'}
+              </h3>
+              <div className="grid grid-cols-2 gap-y-8 gap-x-4">
+                <div className="flex flex-col">
+                  <span className="text-3xl font-serif font-bold text-primary">
+                    {userStats.posts_viewed || 0}
+                  </span>
+                  <span className="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">
+                    {isEn ? 'Posts Read' : '已读文章'}
+                  </span>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="lg:col-span-2 space-y-12">
-            <div className="bg-[#1b1c1a] rounded-[48px] p-12 text-white relative overflow-hidden group shadow-2xl">
-              <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-[#9e2016]/20 rounded-full blur-[80px]"></div>
-              <div className="relative z-10 space-y-6">
-                <p className="text-[10px] font-sans font-black uppercase tracking-[0.4em] text-[#9e2016]">
-                  {isEn ? 'Daily Wisdom' : '古语今智'}
-                </p>
-                <p className="font-serif text-2xl md:text-3xl leading-relaxed italic text-white/90">
-                  &quot;{dailyWisdom.quote}&quot;
-                </p>
-                <div className="h-[1px] w-12 bg-[#9e2016]"></div>
-                <p className="text-xs font-sans font-bold text-white/40 uppercase tracking-widest">
-                  — {dailyWisdom.source}
-                </p>
+                <div className="flex flex-col">
+                  <span className="text-3xl font-serif font-bold text-primary">
+                    {userStats.bookmarks_count || 0}
+                  </span>
+                  <span className="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">
+                    {isEn ? 'Bookmarks' : '收藏'}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-3xl font-serif font-bold text-secondary">
+                    {userStats.badges_earned || 0}
+                  </span>
+                  <span className="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">
+                    {isEn ? 'Achievements' : '成就'}
+                  </span>
+                </div>
+                {isBlogger && (
+                  <div className="flex flex-col">
+                    <span className="text-3xl font-serif font-bold text-secondary">
+                      {userStats.posts_created || 0}
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">
+                      {isEn ? 'Posts Written' : '已发布'}
+                    </span>
+                  </div>
+                )}
+                {!isBlogger && (
+                  <div className="flex flex-col">
+                    <span className="text-3xl font-serif font-bold text-secondary">
+                      {myPosts?.length || 0}
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">
+                      {isEn ? 'Lessons Done' : '已完成'}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
-            <div className="space-y-8">
-              <div className="flex items-center justify-between">
-                <h2 className="font-serif text-4xl font-black text-[#1b1c1a] tracking-tight">
-                  {isEn ? 'Recent Exploration' : '最近探索'}
+            {userBadges && userBadges.length > 0 && (
+              <div className="bg-surface-container p-8">
+                <h3 className="font-serif text-xs tracking-widest text-tertiary uppercase mb-6">
+                  {isEn ? 'Earned Badges' : '已获勋章'}
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {userBadges.slice(0, 6).map((badge: any) => (
+                    <div key={badge.badge_id} className="w-12 h-12 bg-tertiary-fixed rounded-full flex items-center justify-center" title={badge.badges?.name}>
+                      <span className="material-symbols-outlined text-tertiary">workspace_premium</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="bg-surface-container-high p-8">
+              <h3 className="font-serif text-xs tracking-widest text-tertiary uppercase mb-6">
+                {isEn ? "Scholar's Shortcuts" : '快捷入口'}
+              </h3>
+              <div className="flex flex-col gap-3">
+                <Link href={`/${lang}/blog`} className="group flex items-center justify-between p-4 bg-surface hover:bg-primary hover:text-on-primary transition-all duration-300">
+                  <span className="font-medium">{isEn ? 'Browse Articles' : '浏览文章'}</span>
+                  <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </Link>
+                <Link href={`/${lang}/lessons`} className="group flex items-center justify-between p-4 bg-surface hover:bg-secondary hover:text-on-primary transition-all duration-300">
+                  <span className="font-medium">{isEn ? 'Continue Learning' : '继续学习'}</span>
+                  <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">menu_book</span>
+                </Link>
+                <Link href={`/${lang}/landmarks`} className="group flex items-center justify-between p-4 bg-surface hover:bg-surface-dim transition-all duration-300">
+                  <span className="font-medium">{isEn ? 'Explore Map' : '探索地图'}</span>
+                  <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">map</span>
+                </Link>
+                <Link href={`/${lang}/bookmarks`} className="group flex items-center justify-between p-4 bg-surface hover:bg-surface-dim transition-all duration-300">
+                  <span className="font-medium">{isEn ? 'My Bookmarks' : '我的收藏'}</span>
+                  <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">bookmark</span>
+                </Link>
+                {isBlogger && (
+                  <Link href={`/${lang}/blog/new`} className="group flex items-center justify-between p-4 border border-primary/20 text-primary hover:bg-primary hover:text-on-primary transition-all duration-300">
+                    <span className="font-medium">{isEn ? 'Write Post' : '写文章'}</span>
+                    <span className="material-symbols-outlined">edit_note</span>
+                  </Link>
+                )}
+                <Link href={`/${lang}`} className="group flex items-center justify-between p-4 border border-outline transition-all duration-300">
+                  <span className="font-medium">{isEn ? 'Back to Home' : '返回首页'}</span>
+                  <span className="material-symbols-outlined">home</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="md:col-span-8">
+            <div className="bg-surface-container-lowest p-8 min-h-full border border-outline">
+              <div className="flex items-center justify-between mb-10">
+                <h2 className="text-3xl font-serif font-bold text-on-surface">
+                  {isEn ? 'Recent Activity Feed' : '最近活动'}
                 </h2>
+                <span className="material-symbols-outlined text-tertiary">history</span>
               </div>
               
-              <div className="space-y-4">
-                {recentActivity.map((activity, idx) => (
-                  <div key={idx} className="bg-white rounded-3xl p-6 border border-[#1b1c1a]/5 flex items-center justify-between group hover:shadow-xl transition-all cursor-pointer">
-                    <div className="flex items-center gap-6">
-                      <div className="w-14 h-14 rounded-2xl bg-[#FAF8F5] border border-[#1b1c1a]/5 flex items-center justify-center text-[#1b1c1a]/40 group-hover:text-[#9e2016] transition-colors">
-                        {activity.type === 'blog' && <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>}
-                        {activity.type === 'lesson' && <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>}
-                        {activity.type === 'landmark' && <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>}
+              {recentActivity && recentActivity.length > 0 ? (
+                <div className="space-y-12 relative">
+                  <div className="absolute left-[11px] top-2 bottom-2 w-px bg-outline-variant" />
+                  
+                  {recentActivity.map((activity: any) => (
+                    <div key={activity.id} className="relative pl-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div className={`absolute left-0 top-1.5 w-6 h-6 rounded-full ${getActivityColor(activity.action_type)} flex items-center justify-center`}>
+                        <span className="material-symbols-outlined text-xs">
+                          {getActivityIcon(activity.action_type)}
+                        </span>
                       </div>
                       <div>
-                        <p className="font-serif text-xl font-bold text-[#1b1c1a]">{activity.title}</p>
-                        <p className="text-[10px] font-sans font-bold text-[#1b1c1a]/30 uppercase tracking-widest mt-1">{activity.time}</p>
+                        <h4 className="font-bold text-on-surface">
+                          {activity.action_type.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
+                        </h4>
+                        <p className="text-sm text-on-surface-variant">
+                          {activity.target_type ? `Target: ${activity.target_type}` : 'System activity'}
+                        </p>
                       </div>
+                      <span className="text-xs uppercase tracking-widest text-secondary font-bold whitespace-nowrap">
+                        {formatTimeAgo(activity.created_at)}
+                      </span>
                     </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#1b1c1a]/20 group-hover:translate-x-2 transition-transform"><path d="m9 18 6-6-6-6"/></svg>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-surface-container mx-auto rounded-full flex items-center justify-center mb-4">
+                    <span className="material-symbols-outlined text-3xl text-on-surface-variant">explore</span>
                   </div>
-                ))}
-              </div>
+                  <h4 className="font-bold text-on-surface mb-2">
+                    {isEn ? 'No Activity Yet' : '暂无活动'}
+                  </h4>
+                  <p className="text-sm text-on-surface-variant mb-6">
+                    {isEn 
+                      ? 'Start exploring ChinaVerse to see your activity here!' 
+                      : '开始探索中华宇宙，在这里查看您的活动记录！'}
+                  </p>
+                  <Link href={`/${lang}/blog`} className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-on-primary hover:bg-primary-container transition-colors">
+                    <span className="material-symbols-outlined">arrow_forward</span>
+                    <span>{isEn ? 'Start Exploring' : '开始探索'}</span>
+                  </Link>
+                </div>
+              )}
             </div>
-          </div>
 
-          <div className="lg:col-span-1 space-y-8">
-            <h2 className="font-serif text-3xl font-black text-[#1b1c1a] tracking-tight">
-              {isEn ? 'Direct Tunnels' : '快速通道'}
-            </h2>
-            <div className="space-y-4">
-              <Link href={`/${lang}/blog`} className="block p-8 rounded-[40px] bg-[#9e2016] text-white group transition-all hover:translate-y-[-4px] shadow-xl shadow-[#9e2016]/20">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/40"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                <div className="mt-6">
-                  <p className="font-serif text-2xl font-black">{isEn ? 'Imperial Blog' : '档案博客'}</p>
-                  <p className="text-[10px] font-black uppercase tracking-widest mt-1 text-white/40">{isEn ? 'New chronicles' : '最新纪事'}</p>
+            {isAdmin && (
+              <div className="bg-surface-container-lowest p-8 mt-8 border border-outline">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-serif font-bold text-on-surface">
+                    {isEn ? 'Admin Panel' : '管理面板'}
+                  </h2>
+                  <span className="material-symbols-outlined text-primary">admin_panel_settings</span>
                 </div>
-              </Link>
-              <Link href={`/${lang}/lessons`} className="block p-8 rounded-[40px] bg-white text-[#1b1c1a] border border-[#1b1c1a]/5 hover:shadow-2xl transition-all hover:translate-y-[-4px]">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#9e2016]"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-                <div className="mt-6">
-                  <p className="font-serif text-2xl font-black">{isEn ? 'Learning Path' : '修身书院'}</p>
-                  <p className="text-[10px] font-black uppercase tracking-widest mt-1 text-[#1b1c1a]/30">{isEn ? 'Master the arts' : '学习文化精髓'}</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <Link href={`/${lang}/admin/posts`} className="p-4 bg-surface-container hover:bg-primary hover:text-on-primary transition-all text-center">
+                    <span className="material-symbols-outlined text-2xl block mb-2">article</span>
+                    <span className="text-sm font-medium">{isEn ? 'Manage Posts' : '管理文章'}</span>
+                  </Link>
+                  <Link href={`/${lang}/admin/users`} className="p-4 bg-surface-container hover:bg-primary hover:text-on-primary transition-all text-center">
+                    <span className="material-symbols-outlined text-2xl block mb-2">group</span>
+                    <span className="text-sm font-medium">{isEn ? 'Manage Users' : '管理用户'}</span>
+                  </Link>
+                  <Link href={`/${lang}/admin/landmarks`} className="p-4 bg-surface-container hover:bg-primary hover:text-on-primary transition-all text-center">
+                    <span className="material-symbols-outlined text-2xl block mb-2">location_on</span>
+                    <span className="text-sm font-medium">{isEn ? 'Manage Landmarks' : '管理地标'}</span>
+                  </Link>
+                  <Link href={`/${lang}/admin/lessons`} className="p-4 bg-surface-container hover:bg-primary hover:text-on-primary transition-all text-center">
+                    <span className="material-symbols-outlined text-2xl block mb-2">school</span>
+                    <span className="text-sm font-medium">{isEn ? 'Manage Lessons' : '管理课程'}</span>
+                  </Link>
                 </div>
-              </Link>
-              <Link href={`/${lang}/landmarks`} className="block p-8 rounded-[40px] bg-white text-[#1b1c1a] border border-[#1b1c1a]/5 hover:shadow-2xl transition-all hover:translate-y-[-4px]">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#9e2016]"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                <div className="mt-6">
-                  <p className="font-serif text-2xl font-black">{isEn ? 'Relic Map' : '遗迹舆图'}</p>
-                  <p className="text-[10px] font-black uppercase tracking-widest mt-1 text-[#1b1c1a]/30">{isEn ? 'Explore layout' : '探索九州地志'}</p>
-                </div>
-              </Link>
-              <Link href={`/${lang}/bookmarks`} className="block p-8 rounded-[40px] bg-white text-[#1b1c1a] border border-[#1b1c1a]/5 hover:shadow-2xl transition-all hover:translate-y-[-4px]">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#9e2016]"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
-                <div className="mt-6">
-                  <p className="font-serif text-2xl font-black">{isEn ? 'Private Library' : '私人馆藏'}</p>
-                  <p className="text-[10px] font-black uppercase tracking-widest mt-1 text-[#1b1c1a]/30">{isEn ? 'Personal vault' : '您的个人收藏'}</p>
-                </div>
-              </Link>
-            </div>
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      </main>
+
+      <footer className="bg-surface border-t border-tertiary/20 py-12">
+        <div className="flex flex-col items-center gap-6 max-w-7xl mx-auto">
+          <div className="flex flex-wrap justify-center gap-8 px-4">
+            <Link href={`/${lang}`} className="text-xs uppercase tracking-widest text-on-surface-variant hover:text-primary transition-opacity">
+              About
+            </Link>
+            <Link href={`/${lang}/blog`} className="text-xs uppercase tracking-widest text-on-surface-variant hover:text-primary transition-opacity">
+              Blog
+            </Link>
+            <Link href={`/${lang}/landmarks`} className="text-xs uppercase tracking-widest text-on-surface-variant hover:text-primary transition-opacity">
+              Map
+            </Link>
+            <Link href={`/${lang}/settings`} className="text-xs uppercase tracking-widest text-on-surface-variant hover:text-primary transition-opacity">
+              Settings
+            </Link>
+          </div>
+          <p className="text-xs uppercase tracking-widest text-tertiary text-center">
+            ChinaVerse 2026 | Cultural Heritage Project
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
