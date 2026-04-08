@@ -6,9 +6,17 @@ export async function updateSession(request: NextRequest) {
     request,
   })
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('Missing Supabase environment variables in middleware')
+    return supabaseResponse
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         getAll() {
@@ -33,27 +41,19 @@ export async function updateSession(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
-  const isProtectedRoute = pathname.startsWith('/en/dashboard') || 
-                          pathname.startsWith('/zh/dashboard') ||
-                          pathname.startsWith('/en/blogger') || 
-                          pathname.startsWith('/zh/blogger') ||
-                          pathname.startsWith('/en/admin') || 
-                          pathname.startsWith('/zh/admin') ||
-                          pathname.startsWith('/en/settings') || 
-                          pathname.startsWith('/zh/settings') ||
-                          pathname.startsWith('/en/bookmarks') || 
-                          pathname.startsWith('/zh/bookmarks')
+  const isProtectedRoute = pathname.includes('/dashboard') || 
+                          pathname.includes('/blogger') || 
+                          pathname.includes('/admin') ||
+                          pathname.includes('/settings') || 
+                          pathname.includes('/bookmarks')
 
-  const isAuthRoute = pathname.startsWith('/en/login') || 
-                     pathname.startsWith('/zh/login') ||
-                     pathname.startsWith('/en/register') || 
-                     pathname.startsWith('/zh/register') ||
-                     pathname.startsWith('/en/forgot-password') || 
-                     pathname.startsWith('/zh/forgot-password')
+  const isAuthRoute = pathname.includes('/login') || 
+                     pathname.includes('/register') || 
+                     pathname.includes('/forgot-password')
 
   if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone()
-    const lang = pathname.split('/')[1]
+    const lang = pathname.split('/')[1] || 'en'
     url.pathname = `/${lang}/login`
     url.searchParams.set('redirect', pathname)
     return NextResponse.redirect(url)
@@ -61,7 +61,7 @@ export async function updateSession(request: NextRequest) {
 
   if (user && isAuthRoute) {
     const url = request.nextUrl.clone()
-    const lang = pathname.split('/')[1]
+    const lang = pathname.split('/')[1] || 'en'
     url.pathname = `/${lang}/dashboard`
     return NextResponse.redirect(url)
   }
