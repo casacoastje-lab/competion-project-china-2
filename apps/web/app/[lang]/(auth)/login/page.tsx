@@ -41,11 +41,19 @@ function LoginForm({ lang }: { lang: string }) {
       });
 
       if (authError) {
+        console.log('Auth error:', authError.message);
         if (authError.message.includes('Email not confirmed')) {
           setError(isEn ? 'Please check your email and confirm your account first.' : '请查收邮件并先确认您的账户。');
+        } else if (authError.message.includes('Invalid login credentials')) {
+          setError(isEn ? 'Invalid email or password. Please check your credentials.' : '邮箱或密码错误，请检查您的凭据。');
         } else {
-          setError(isEn ? 'Invalid email or password.' : '邮箱或密码错误。');
+          setError(isEn ? 'Login failed: ' + authError.message : '登录失败：' + authError.message);
         }
+        return;
+      }
+
+      if (!data.user) {
+        setError(isEn ? 'Login failed. Please try again.' : '登录失败，请重试。');
         return;
       }
 

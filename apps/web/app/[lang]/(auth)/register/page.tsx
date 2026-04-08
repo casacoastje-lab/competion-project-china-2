@@ -47,7 +47,7 @@ export default function RegisterPage({ params }: { params: Promise<{ lang: strin
     try {
       const supabase = createClient();
       
-      const { error: signUpError } = await supabase.auth.signUp({
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -59,12 +59,28 @@ export default function RegisterPage({ params }: { params: Promise<{ lang: strin
       });
 
       if (signUpError) {
-        setError(isEn ? 'Registration failed. Please try again.' : '注册失败，请重试。');
+        console.log('Signup error:', signUpError.message);
+        setError(isEn ? 'Registration failed: ' + signUpError.message : '注册失败：' + signUpError.message);
         return;
       }
 
+      // Auto sign in after registration
+      if (data.user) {
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (!signInError) {
+          router.push(`/${lang}/dashboard`);
+          router.refresh();
+          return;
+        }
+      }
+
       setSuccess(true);
-    } catch {
+    } catch (err) {
+      console.log('Registration error:', err);
       setError(isEn ? 'Registration failed. Please try again.' : '注册失败，请重试。');
     } finally {
       setLoading(false);
