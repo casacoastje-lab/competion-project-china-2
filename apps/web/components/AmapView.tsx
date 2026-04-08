@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 
-const AmapViewComponent = dynamic(() => import('./AmapView'), {
+const AmapMap = dynamic(() => import('./AmapViewImpl'), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full flex items-center justify-center bg-[#FAF8F5]">
@@ -29,5 +29,5 @@ interface AmapViewProps {
 }
 
 export default function AmapView(props: AmapViewProps) {
-  return <AmapViewComponent {...props} />;
+  return <AmapMap {...props} />;
 }
