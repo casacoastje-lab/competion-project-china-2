@@ -24,16 +24,17 @@ export default function RegisterPage({ params }: { params: Promise<{ lang: strin
 
   const isEn = lang === 'en';
 
-  const dict = {
-    nav: { login: isEn ? 'Login' : '登录', register: isEn ? 'Register' : '注册' },
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
     if (!username.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
       setError(isEn ? 'Please fill in all fields.' : '请填写所有字段。');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError(isEn ? 'Password must be at least 6 characters.' : '密码必须至少6个字符。');
       return;
     }
 
@@ -47,51 +48,50 @@ export default function RegisterPage({ params }: { params: Promise<{ lang: strin
     try {
       const supabase = createClient();
       
-      // First try to sign in - user might already exist
-      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            username,
+            display_name: username,
+          },
+        },
       });
 
-      if (!signInError && signInData.user) {
-        // User already exists and logged in successfully
-        router.push(`/${lang}/dashboard`);
-        router.refresh();
+      if (signUpError) {
+        console.log('Signup error:', signUpError.message);
+        
+        if (signUpError.message.includes('signups') || signUpError.message.includes('Signups') || signUpError.message.includes('signup')) {
+          setError(isEn 
+            ? 'Registration is disabled. Please contact the administrator.' 
+            : '注册已禁用。请联系管理员。');
+        } else if (signUpError.message.includes('already')) {
+          setError(isEn 
+            ? 'An account with this email already exists. Try logging in.' 
+            : '此邮箱已存在账户。请尝试登录。');
+        } else {
+          setError(isEn 
+            ? 'Registration failed: ' + signUpError.message 
+            : '注册失败：' + signUpError.message);
+        }
         return;
       }
 
-      // If sign in failed with invalid credentials, try to sign up
-      if (signInError && signInError.message.includes('Invalid login credentials')) {
-        const { data, error: signUpError } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              username,
-              display_name: username,
-            },
-          },
-        });
-
-        if (signUpError) {
-          if (signUpError.message.includes('Signups not allowed') || signUpError.message.includes('signups not allowed')) {
-            setError(isEn ? 'Registration is currently disabled. Please contact the administrator.' : '注册已禁用。请联系管理员。');
-          } else {
-            setError(isEn ? 'Registration failed: ' + signUpError.message : '注册失败：' + signUpError.message);
-          }
-          return;
-        }
-
-        if (data.user) {
+      if (data.user) {
+        // Check if email confirmation is required
+        if (data.user.email_confirmed_at) {
+          // No confirmation needed, redirect to dashboard
           router.push(`/${lang}/dashboard`);
           router.refresh();
-          return;
+        } else {
+          // Email confirmation required
+          setSuccess(true);
         }
       } else {
-        // Other sign in error
-        setError(isEn ? 'Registration failed: ' + signInError.message : '注册失败：' + signInError.message);
+        setSuccess(true);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log('Registration error:', err);
       setError(isEn ? 'Registration failed. Please try again.' : '注册失败，请重试。');
     } finally {
@@ -115,8 +115,8 @@ export default function RegisterPage({ params }: { params: Promise<{ lang: strin
           </h2>
           <p className="text-sm text-[#1b1c1a]/60 font-sans leading-relaxed px-4">
             {isEn 
-              ? 'We sent a verification link to your email. Please click the link to activate your heritage archive access.'
-              : '我们已向您的邮箱发送了验证链接，请点击链接激活您的文化遗产档案访问权限。'}
+              ? 'We sent a verification link to your email. Please click the link to activate your account.'
+              : '我们已向您的邮箱发送了验证链接，请点击链接激活您的账户。'}
           </p>
         </div>
         <div className="pt-4">
@@ -144,7 +144,7 @@ export default function RegisterPage({ params }: { params: Promise<{ lang: strin
         <div className="space-y-10 relative z-10">
           <div className="text-center space-y-2">
             <h1 className="font-serif text-5xl font-black text-[#1b1c1a] tracking-tight">
-              {dict.nav.register}
+              {isEn ? 'Register' : '注册'}
             </h1>
             <p className="text-[10px] font-sans font-black uppercase tracking-[0.4em] text-[#9e2016] opacity-60">
                {isEn ? 'Join the Revival' : '加入文化复兴'}
@@ -164,10 +164,9 @@ export default function RegisterPage({ params }: { params: Promise<{ lang: strin
             )}
 
             <div className="space-y-4">
-               {/* Username Input */}
                <div className="space-y-3">
                   <label className="text-[10px] font-sans font-black uppercase tracking-widest text-[#1b1c1a]/30 ml-4">
-                     {isEn ? 'Explorer Persona' : '探索者署名'}
+                     {isEn ? 'Username' : '用户名'}
                   </label>
                   <div className="relative">
                      <input 
@@ -175,16 +174,15 @@ export default function RegisterPage({ params }: { params: Promise<{ lang: strin
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         className="w-full bg-[#FAF8F5]/50 border border-[#1b1c1a]/5 rounded-2xl px-14 py-4 text-sm focus:ring-4 focus:ring-[#9e2016]/5 focus:bg-white focus:border-[#9e2016]/20 transition-all outline-none"
-                        placeholder="zhang_san"
+                        placeholder={isEn ? "your_username" : "用户名"}
                      />
                      <User className="absolute left-6 top-1/2 -translate-y-1/2 text-[#9e2016]/30 w-5 h-5" />
                   </div>
                </div>
 
-               {/* Email Input */}
                <div className="space-y-3">
                   <label className="text-[10px] font-sans font-black uppercase tracking-widest text-[#1b1c1a]/30 ml-4">
-                     {isEn ? 'Heritage ID (Email)' : '遗产账号 (邮箱)'}
+                     {isEn ? 'Email' : '邮箱'}
                   </label>
                   <div className="relative">
                      <input 
@@ -192,17 +190,16 @@ export default function RegisterPage({ params }: { params: Promise<{ lang: strin
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="w-full bg-[#FAF8F5]/50 border border-[#1b1c1a]/5 rounded-2xl px-14 py-4 text-sm focus:ring-4 focus:ring-[#9e2016]/5 focus:bg-white focus:border-[#9e2016]/20 transition-all outline-none"
-                        placeholder="hello@chinaverse.com"
+                        placeholder={isEn ? "you@example.com" : "邮箱@example.com"}
                      />
                      <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-[#9e2016]/30 w-5 h-5" />
                   </div>
                </div>
 
-               {/* Password Grid */}
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-3">
                     <label className="text-[10px] font-sans font-black uppercase tracking-widest text-[#1b1c1a]/30 ml-4">
-                       {isEn ? 'Passphrase' : '口令'}
+                       {isEn ? 'Password' : '密码'}
                     </label>
                     <div className="relative">
                        <input 
@@ -210,7 +207,7 @@ export default function RegisterPage({ params }: { params: Promise<{ lang: strin
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           className="w-full bg-[#FAF8F5]/50 border border-[#1b1c1a]/5 rounded-2xl px-14 py-4 text-sm focus:ring-4 focus:ring-[#9e2016]/5 focus:bg-white focus:border-[#9e2016]/20 transition-all outline-none"
-                          placeholder="••••"
+                          placeholder="••••••"
                        />
                        <Lock className="absolute left-6 top-1/2 -translate-y-1/2 text-[#9e2016]/30 w-5 h-5" />
                     </div>
@@ -225,7 +222,7 @@ export default function RegisterPage({ params }: { params: Promise<{ lang: strin
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           className="w-full bg-[#FAF8F5]/50 border border-[#1b1c1a]/5 rounded-2xl px-14 py-4 text-sm focus:ring-4 focus:ring-[#9e2016]/5 focus:bg-white focus:border-[#9e2016]/20 transition-all outline-none"
-                          placeholder="••••"
+                          placeholder="••••••"
                        />
                        <Lock className="absolute left-6 top-1/2 -translate-y-1/2 text-[#9e2016]/30 w-5 h-5" />
                     </div>
@@ -236,18 +233,20 @@ export default function RegisterPage({ params }: { params: Promise<{ lang: strin
             <button 
               type="submit"
               disabled={loading}
-              className="w-full bg-[#1b1c1a] text-white py-6 rounded-2xl font-sans font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-[#1b1c1a]/20 hover:bg-[#9e2016] hover:translate-y-[-2px] active:translate-y-0 transition-all flex items-center justify-center gap-4 disabled:opacity-60 disabled:cursor-not-allowed group/btn"
+              className="w-full bg-[#1b1c1a] text-white py-6 rounded-2xl font-sans font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-[#1b1c1a]/20 hover:bg-[#9e2016] hover:translate-y-[-2px] active:translate-y-0 transition-all flex items-center justify-center gap-4 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-               {loading ? (isEn ? 'Enrolling...' : '加入中...') : (
-                 <>{isEn ? 'Become an Explorer' : '成为探索者'} <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" /></>
+               {loading ? (isEn ? 'Creating account...' : '创建账户...') : (
+                 <>{isEn ? 'Create Account' : '创建账户'} <ChevronRight className="w-4 h-4" /></>
                )}
             </button>
           </form>
 
           <div className="pt-8 text-center border-t border-[#1b1c1a]/5">
              <p className="text-[10px] font-sans font-black text-[#1b1c1a]/30 uppercase tracking-[0.2em]">
-                {isEn ? "Already an explorer?" : "已经是探索者？"} 
-                <Link href={`/${lang}/login`} className="text-[#9e2016] ml-3 hover:underline underline-offset-4">{dict.nav.register}</Link>
+                {isEn ? "Already have an account?" : "已有账户？"} 
+                <Link href={`/${lang}/login`} className="text-[#9e2016] ml-3 hover:underline underline-offset-4">
+                  {isEn ? 'Login here' : '在此登录'}
+                </Link>
              </p>
           </div>
         </div>
@@ -255,7 +254,7 @@ export default function RegisterPage({ params }: { params: Promise<{ lang: strin
       
       <div className="mt-8 text-center">
          <Link href={`/${lang}`} className="inline-flex items-center gap-2 text-[10px] font-sans font-black uppercase tracking-widest text-[#1b1c1a]/20 hover:text-[#9e2016] transition-colors">
-            <ArrowLeft size={12} /> {isEn ? 'Back to Exploration' : '返回探索'}
+            <ArrowLeft size={12} /> {isEn ? 'Back to Home' : '返回首页'}
          </Link>
       </div>
     </motion.div>
