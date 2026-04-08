@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { createBrowserClient } from '@supabase/ssr';
 import { User, LogOut, ChevronDown, Search, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import GlobalSearchModal from './GlobalSearchModal';
@@ -19,13 +19,19 @@ export default function Navbar({ lang, dict }: NavbarProps) {
   const [profile, setProfile] = useState<any>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const supabase = createClient();
+  const [supabase, setSupabase] = useState<any>(null);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const supabaseClient = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+    setSupabase(supabaseClient);
+
+    const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        supabase.from('profiles').select('*').eq('id', session.user.id).single()
+        supabaseClient.from('profiles').select('*').eq('id', session.user.id).single()
           .then(({ data }) => setProfile(data));
       } else {
         setProfile(null);
@@ -33,16 +39,16 @@ export default function Navbar({ lang, dict }: NavbarProps) {
     });
 
     // Initial check
-    supabase.auth.getUser().then(({ data: { user: currentUser } }) => {
+    supabaseClient.auth.getUser().then(({ data: { user: currentUser } }) => {
       if (currentUser) {
         setUser(currentUser);
-        supabase.from('profiles').select('*').eq('id', currentUser.id).single()
+        supabaseClient.from('profiles').select('*').eq('id', currentUser.id).single()
           .then(({ data }) => setProfile(data));
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [supabase]);
+  }, []);
 
   const navLinks = [
     { href: `/${lang}/landmarks`, label: dict.nav.explore, labelZh: '探索', active: pathname.includes('/landmarks') },
@@ -51,7 +57,9 @@ export default function Navbar({ lang, dict }: NavbarProps) {
   ];
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
     setUser(null);
     setProfile(null);
     window.location.href = `/${lang}/login`;
