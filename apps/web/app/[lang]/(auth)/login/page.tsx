@@ -35,27 +35,14 @@ function LoginForm({ lang }: { lang: string }) {
     try {
       const supabase = createClient();
       
-      const { error: authError, data } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password: password,
       });
 
       if (authError) {
-        console.error('Login error details:', {
-          message: authError.message,
-          status: authError.status,
-          code: authError.code
-        });
-        
-        if (authError.message.includes('Email not confirmed') || authError.message.includes('not confirmed')) {
-          setError(isEn ? 'Please confirm your email first. Check your inbox for verification link.' : '请先确认您的邮箱。查收收件箱中的验证链接。');
-        } else if (authError.message.includes('Invalid login credentials') || authError.message.includes('Invalid credentials')) {
-          setError(isEn ? 'Invalid email or password.' : '邮箱或密码错误。');
-        } else if (authError.status === 400) {
-          setError(isEn ? 'Invalid email or password.' : '邮箱或密码错误。');
-        } else {
-          setError(isEn ? 'Login failed: ' + authError.message : '登录失败：' + authError.message);
-        }
+        console.error('Login error:', authError);
+        setError(authError.message || (isEn ? 'Login failed. Please try again.' : '登录失败，请重试。'));
         return;
       }
 
@@ -64,10 +51,12 @@ function LoginForm({ lang }: { lang: string }) {
         return;
       }
 
+      // Success - redirect to dashboard
       const redirectTo = searchParams.get('redirect') || `/${lang}/dashboard`;
       router.push(redirectTo);
       router.refresh();
-    } catch {
+    } catch (err) {
+      console.error('Login catch error:', err);
       setError(isEn ? 'Login failed. Please try again.' : '登录失败，请重试。');
     } finally {
       setLoading(false);
