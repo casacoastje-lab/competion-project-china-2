@@ -1,24 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { ChevronRight, Mail, Lock, AlertCircle, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function LoginPage({ params }: { params: Promise<{ lang: string }> }) {
-  const [lang, setLang] = useState<string>('en');
+function LoginForm({ lang }: { lang: string }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  useEffect(() => {
-    params.then(p => setLang(p.lang));
-  }, [params]);
 
   const isEn = lang === 'en';
 
@@ -68,7 +63,6 @@ export default function LoginPage({ params }: { params: Promise<{ lang: string }
       className="w-full max-w-md"
     >
       <div className="bg-white/80 backdrop-blur-2xl rounded-[48px] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.1)] p-12 border border-white/20 relative overflow-hidden group">
-        {/* Subtle Accent Line */}
         <div className="absolute left-0 top-0 w-full h-1 bg-gradient-to-r from-transparent via-[#9e2016]/20 to-transparent"></div>
         
         <div className="space-y-10 relative z-10">
@@ -158,5 +152,42 @@ export default function LoginPage({ params }: { params: Promise<{ lang: string }
          </Link>
       </div>
     </motion.div>
+  );
+}
+
+function LoginFormFallback({ lang }: { lang: string }) {
+  const isEn = lang === 'en';
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className="w-full max-w-md"
+    >
+      <div className="bg-white/80 backdrop-blur-2xl rounded-[48px] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.1)] p-12 border border-white/20 relative overflow-hidden">
+        <div className="animate-pulse space-y-8">
+          <div className="h-16 bg-gray-200 rounded-2xl"></div>
+          <div className="space-y-6">
+            <div className="h-14 bg-gray-200 rounded-2xl"></div>
+            <div className="h-14 bg-gray-200 rounded-2xl"></div>
+          </div>
+          <div className="h-16 bg-gray-200 rounded-2xl"></div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+export default function LoginPage({ params }: { params: Promise<{ lang: string }> }) {
+  const [lang, setLang] = useState<string>('en');
+
+  useEffect(() => {
+    params.then(p => setLang(p.lang));
+  }, [params]);
+
+  return (
+    <Suspense fallback={<LoginFormFallback lang={lang} />}>
+      <LoginForm lang={lang} />
+    </Suspense>
   );
 }
