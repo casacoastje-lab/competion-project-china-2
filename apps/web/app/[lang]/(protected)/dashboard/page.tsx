@@ -1,18 +1,37 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
+import {
+  BookMarked,
+  BookOpen,
+  Bookmark,
+  Crown,
+  MapPin,
+  ScrollText,
+  Sparkles,
+  UserRound,
+  PenLine,
+  Trophy,
+  Compass,
+  Palette,
+  Award,
+  ArrowRight,
+} from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 
 interface PageProps {
   params: Promise<{ lang: string }>;
 }
 
+const grainBg = "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")";
+
 export default async function Dashboard({ params }: PageProps) {
   const { lang } = await params;
   const isEn = lang === 'en';
   const supabase = await createClient();
-  
-  const { data: { user } } = await supabase.auth.getUser();
-  
+
+  const { data: { user } = { user: null } } = await supabase.auth.getUser();
+
   if (!user) {
     redirect(`/${lang}/login`);
   }
@@ -25,386 +44,320 @@ export default async function Dashboard({ params }: PageProps) {
 
   const { data: bookmarks } = await supabase
     .from('bookmarks')
-    .select('*, posts:post_id(id, title_en, title_zh, cover_image_url, categories:category_id(name_en))')
+    .select('id, created_at, posts:post_id(id, title_en, title_zh, cover_image_url, categories:category_id(name_en))')
     .eq('user_id', user.id)
-    .limit(5);
+    .order('created_at', { ascending: false })
+    .limit(4);
 
   const { data: userBadges } = await supabase
     .from('user_badges')
-    .select('*, badges:badge_id(id, name)')
+    .select('badge_id, earned_at, badges:badge_id(id, name, description, icon_url)')
     .eq('user_id', user.id);
 
   const { data: recentProgress } = await supabase
     .from('user_progress')
-    .select('*, posts:post_id(id, title_en, title_zh)')
+    .select('id, progress_percent, completed, content_id, content_type, posts:post_id(id, title_en, title_zh, cover_image_url)')
     .eq('user_id', user.id)
     .eq('content_type', 'blog')
     .order('last_accessed_at', { ascending: false })
-    .limit(5);
+    .limit(6);
 
-  const isAdmin = profile?.role === 'admin';
-  const isBlogger = profile?.role === 'blogger' || isAdmin;
+  const role = profile?.role || 'reader';
 
-  const getRoleLabel = () => {
-    if (isAdmin) return 'Admin';
-    if (isBlogger) return 'Blogger';
-    return 'Reader';
+  const stats = {
+    lessonsComplete: recentProgress?.filter(p => p.completed).length || 0,
+    postsRead: recentProgress?.length || 0,
+    badges: userBadges?.length || 0,
   };
 
-  return (
-    <div className="min-h-screen bg-[#FAF8F5] text-[#1b1c1a] relative overflow-x-hidden">
-      <div className="fixed inset-0 pointer-events-none z-0 opacity-[0.05]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }} />
+  const roleChip = role === 'admin' ? 'Admin' : role === 'blogger' ? 'Blogger' : 'Reader';
 
-      <header className="fixed top-0 w-full z-50 bg-[#FAF8F5]/80 backdrop-blur-md border-b border-[#e1bfb9]/15">
-        <div className="flex justify-between items-center w-full px-8 py-4 max-w-[1920px] mx-auto">
-          <div className="flex items-center gap-12">
-            <Link href={`/${lang}`} className="text-2xl font-bold text-[#9e2016] italic tracking-tighter">
-              ChinaVerse 中华宇宙
+  return (
+    <div className="min-h-screen bg-background text-on-surface relative overflow-x-hidden">
+      <div
+        className="fixed inset-0 pointer-events-none z-0 opacity-[0.05]"
+        style={{ backgroundImage: grainBg }}
+        aria-hidden
+      />
+
+      <header className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/25">
+        <div className="flex justify-between items-center w-full px-8 py-4 max-w-[1280px] mx-auto">
+          <div className="flex items-center gap-10">
+            <Link href={`/${lang}`} className="text-2xl font-serif font-black text-primary tracking-tight italic">
+              ChinaVerse 涓崕瀹囧畽
             </Link>
-            <nav className="hidden md:flex gap-8 items-center">
-              <Link href={`/${lang}`} className="text-[#9e2016] font-bold border-b-2 border-[#9e2016] pb-1">
-                Explore 探索
-              </Link>
-              <Link href={`/${lang}/blog`} className="text-[#1b1c1a]/60 font-medium hover:text-[#9e2016] transition-all duration-300">
-                Blog 博客
-              </Link>
-              <Link href={`/${lang}/lessons`} className="text-[#1b1c1a]/60 font-medium hover:text-[#9e2016] transition-all duration-300">
-                Learn 学习
-              </Link>
-              <Link href={`/${lang}/landmarks`} className="text-[#1b1c1a]/60 font-medium hover:text-[#9e2016] transition-all duration-300">
-                Map 地图
-              </Link>
+            <nav className="hidden md:flex gap-7 items-center text-sm">
+              <Link href={`/${lang}`} className="text-primary font-bold border-b-2 border-primary pb-1">{isEn ? 'Explore' : '鎺㈢储'}</Link>
+              <Link href={`/${lang}/blog`} className="text-on-surface/60 hover:text-primary transition-colors">Blog 鍗氬</Link>
+              <Link href={`/${lang}/lessons`} className="text-on-surface/60 hover:text-primary transition-colors">{isEn ? 'Learn' : '瀛︿範'}</Link>
+              <Link href={`/${lang}/landmarks`} className="text-on-surface/60 hover:text-primary transition-colors">Map 鍦板浘</Link>
             </nav>
           </div>
-          <div className="flex items-center gap-6">
-            <span className="text-sm text-[#59413d]">EN | 中</span>
-            <div className="text-2xl cursor-pointer hover:scale-95 transition-transform text-[#9e2016]">
-              <span className="material-symbols-outlined">account_circle</span>
+          <div className="flex items-center gap-5 text-sm text-on-surface-variant">
+            <div className="flex items-center gap-2">
+              <span className={isEn ? 'font-bold text-primary' : ''}>EN</span>
+              <span className="text-outline">|</span>
+              <span className={!isEn ? 'font-bold text-primary' : ''}>涓?</span>
+            </div>
+            <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+              <UserRound className="w-5 h-5" />
             </div>
           </div>
         </div>
       </header>
 
-      <main className="relative z-10 pt-24 pb-16 px-8 max-w-[1920px] mx-auto">
-        <div className="flex flex-col lg:flex-row gap-12">
-        
-          <aside className="w-full lg:w-80 flex-shrink-0 flex flex-col gap-8">
-            <div className="bg-white p-8 rounded-xl flex flex-col items-center text-center shadow-[0_30px_60px_-15px_rgba(27,28,26,0.06)] relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-4">
-                <span className="bg-[#9bf6ba] text-[#0e7344] px-3 py-1 rounded-full text-xs font-bold">
-                  {getRoleLabel()}
-                </span>
+      <main className="relative z-10 pt-32 pb-20 px-6 md:px-10 max-w-[1280px] mx-auto space-y-14">
+        {/* Hero profile */}
+        <section className="flex flex-col md:flex-row items-start md:items-end gap-10">
+          <div className="relative">
+            <div className="w-40 h-40 md:w-52 md:h-52 rounded-[22px] overflow-hidden shadow-[0_35px_80px_-40px_rgba(27,28,26,0.45)] border-4 border-surface-container-lowest bg-surface-container-lowest">
+              <div className="w-full h-full bg-primary/5 flex items-center justify-center text-primary text-4xl font-serif">
+                {(profile?.display_name || profile?.username || user.email || 'U')[0]}
               </div>
-              
-              <div className="relative w-32 h-32 mb-6 flex items-center justify-center">
-                <svg className="w-full h-full transform -rotate-90">
-                  <circle className="text-[#eae8e5]" cx="64" cy="64" fill="none" r="58" stroke="currentColor" strokeWidth="6" />
-                  <circle className="text-[#9e2016]" cx="64" cy="64" fill="none" r="58" stroke="currentColor" strokeDasharray="364.4" strokeDashoffset="91.1" strokeWidth="6" />
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <div className="w-24 h-24 rounded-full bg-[#f5f3f0] p-1 overflow-hidden">
-                    <div className="w-full h-full bg-[#9e2016]/10 rounded-full flex items-center justify-center">
-                      <span className="text-3xl font-bold text-[#9e2016]">
-                        {profile?.display_name?.[0] || profile?.username?.[0] || user.email?.[0]?.toUpperCase()}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <h2 className="text-2xl font-bold text-[#1b1c1a] mb-1">
+            </div>
+            <div className="absolute -bottom-4 -right-4 bg-secondary text-on-secondary px-4 py-1.5 rounded-full flex items-center gap-2 shadow-lg">
+              <BookOpen className="w-4 h-4" />
+              <span className="text-xs font-semibold tracking-widest uppercase">{roleChip}</span>
+            </div>
+          </div>
+
+          <div className="flex-1 space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <h1 className="text-5xl md:text-6xl font-black font-serif tracking-tight">
                 {profile?.display_name || profile?.username || user.email?.split('@')[0]}
-              </h2>
-              <p className="text-sm text-[#59413d]/60 mb-6">
-                Profile 75% Complete
-              </p>
-              
-              <div className="w-full space-y-3">
-                <Link href={`/${lang}/dashboard`} className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#f5f3f0] text-[#9e2016] font-bold">
-                  <span className="material-symbols-outlined">dashboard</span>
-                  <span className="text-sm">Dashboard 仪表板</span>
-                </Link>
-                <Link href={`/${lang}/bookmarks`} className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#59413d] hover:bg-[#eae8e5] transition-colors">
-                  <span className="material-symbols-outlined">bookmark</span>
-                  <span className="text-sm">Bookmarks 书签</span>
-                </Link>
-                <Link href={`/${lang}/history`} className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#59413d] hover:bg-[#eae8e5] transition-colors">
-                  <span className="material-symbols-outlined">history</span>
-                  <span className="text-sm">History 历史记录</span>
-                </Link>
-                <Link href={`/${lang}/settings`} className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#59413d] hover:bg-[#eae8e5] transition-colors">
-                  <span className="material-symbols-outlined">settings</span>
-                  <span className="text-sm">Settings 设置</span>
-                </Link>
-              </div>
+              </h1>
+              <Link
+                href={`/${lang}/settings`}
+                className="flex items-center gap-2 px-6 py-2.5 bg-primary text-on-primary rounded-md shadow-lg shadow-primary/15 hover:scale-[0.99] transition-transform"
+              >
+                <PenLine className="w-4 h-4" />
+                <span className="text-sm font-semibold">{isEn ? 'Edit Profile' : '缂栬緫'}</span>
+              </Link>
             </div>
-
-            <div className="hidden lg:flex flex-col items-center py-8 opacity-20">
-              <div className="h-24 w-px bg-[#1b1c1a] mb-4" />
-              <p className="text-xl [writing-mode:vertical-rl] tracking-[0.5em] leading-loose">
-                读书破万卷 下笔如有神
+            <div className="max-w-2xl space-y-2">
+              <p className="text-lg md:text-xl text-on-surface-variant leading-relaxed">
+                {profile?.bio || (isEn
+                  ? 'Curator of ancient scrolls and digital artifacts. Exploring the intersection of heritage and future tech.'
+                  : '鍙ゅ嵎绛栧睍浜轰笌鏁板瓧鏂囩墿鐨勬帰绱㈣€呫€傚吋瀹瑰師鏂囧拰鏈潵鎶€鏈殑浜ゅ弶鏍囩偣銆?)}
+              </p>
+              <p className="text-base text-primary/75 font-serif">
+                {isEn ? 'Living Scroll Seeker' : '婕?洔鎵€鐨勮宸寸敾鍗?}
               </p>
             </div>
-          </aside>
+          </div>
+        </section>
 
-          <div className="flex-1 flex flex-col gap-16">
-            <section>
-              <div className="flex justify-between items-baseline mb-8 border-b border-[#e1bfb9]/10 pb-4">
-                <h3 className="text-4xl font-bold italic">
-                  The Living Scroll 
-                  <span className="text-2xl not-italic font-normal ml-2">学习历程</span>
-                </h3>
-                <span className="text-sm text-[#59413d]">Update: Today</span>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-[#f5f3f0] p-8 rounded-xl flex flex-col justify-between h-48 border-l-4 border-[#006d3f]">
-                  <div className="flex justify-between items-start">
-                    <span className="text-xs uppercase tracking-widest text-[#59413d] font-bold">
-                      Lessons Completed 课程
-                    </span>
-                    <span className="material-symbols-outlined text-[#006d3f]">auto_stories</span>
-                  </div>
-                  <div>
-                    <div className="flex items-baseline gap-2 mb-2">
-                      <span className="text-4xl font-bold">{recentProgress?.filter(p => p.completed).length || 0}</span>
-                      <span className="text-sm text-[#59413d]">/ {recentProgress?.length || 0}</span>
-                    </div>
-                    <div className="h-1.5 w-full bg-[#eae8e5] rounded-full overflow-hidden">
-                      <div className="h-full bg-[#006d3f]" style={{ width: '80%' }} />
-                    </div>
-                  </div>
-                </div>
+        {/* Stats */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <StatCard
+            title={isEn ? 'Posts Read' : '闃呰鍗氬'}
+            value={stats.postsRead}
+            accent="primary"
+            icon={<ScrollText className="w-6 h-6" />}
+          />
+          <StatCard
+            title={isEn ? 'Lessons Completed' : '瀛︿範瀹屾垚'}
+            value={stats.lessonsComplete}
+            accent="secondary"
+            icon={<BookOpen className="w-6 h-6" />}
+          />
+          <StatCard
+            title={isEn ? 'Badges Earned' : '寰楀彇鍕嬬珷'}
+            value={stats.badges}
+            accent="tertiary"
+            icon={<Trophy className="w-6 h-6" />}
+          />
+        </section>
 
-                <div className="bg-[#f5f3f0] p-8 rounded-xl flex flex-col justify-between h-48 border-l-4 border-[#9e2016]">
-                  <div className="flex justify-between items-start">
-                    <span className="text-xs uppercase tracking-widest text-[#59413d] font-bold">
-                      Posts Read 阅读
-                    </span>
-                    <span className="material-symbols-outlined text-[#9e2016]">article</span>
-                  </div>
-                  <div>
-                    <div className="flex items-baseline gap-2 mb-2">
-                      <span className="text-4xl font-bold">{recentProgress?.length || 0}</span>
-                    </div>
-                    <div className="h-1.5 w-full bg-[#eae8e5] rounded-full overflow-hidden">
-                      <div className="h-full bg-[#9e2016]" style={{ width: '65%' }} />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-[#f5f3f0] p-8 rounded-xl flex flex-col justify-between h-48 border-l-4 border-[#694d00]">
-                  <div className="flex justify-between items-start">
-                    <span className="text-xs uppercase tracking-widest text-[#59413d] font-bold">
-                      Achievements 成就
-                    </span>
-                    <span className="material-symbols-outlined text-[#694d00]">workspace_premium</span>
-                  </div>
-                  <div>
-                    <div className="flex items-baseline gap-2 mb-2">
-                      <span className="text-4xl font-bold">{userBadges?.length || 0}</span>
-                      <span className="text-sm text-[#59413d]">Unlocks</span>
-                    </div>
-                    <div className="flex gap-1">
-                      <div className="w-full h-1 bg-[#694d00]/20 rounded-full" />
-                      <div className="w-full h-1 bg-[#694d00]/20 rounded-full" />
-                      <div className="w-full h-1 bg-[#694d00] rounded-full" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section>
+        {/* Main content grid */}
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+          {/* Left: progress & badges */}
+          <div className="lg:col-span-2 space-y-10">
+            <div className="bg-surface-container-lowest p-10 rounded-[28px] border border-outline-variant/25 shadow-[0_30px_60px_-25px_rgba(27,28,26,0.12)] relative overflow-hidden">
+              <div className="absolute right-10 top-10 w-32 h-32 bg-primary/8 rounded-full blur-3xl" aria-hidden />
               <div className="flex items-center gap-4 mb-8">
-                <h3 className="text-3xl font-bold">Bookmarked 书签</h3>
-                <div className="h-px flex-1 bg-[#e1bfb9]/20" />
+                <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.35em] text-on-surface-variant">{isEn ? 'Recent Progress' : '鏈€杩戣繃绋?}</p>
+                  <h3 className="text-2xl font-serif font-black">The Living Scroll</h3>
+                </div>
               </div>
-              
-              <div className="flex gap-6 overflow-x-auto pb-4" style={{ scrollbarWidth: 'none' }}>
-                {bookmarks && bookmarks.length > 0 ? bookmarks.map((bookmark: any) => (
-                  <Link 
-                    key={bookmark.id} 
-                    href={`/${lang}/blog/${bookmark.posts?.id}`}
-                    className="snap-start min-w-[280px] group cursor-pointer flex-shrink-0"
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {(recentProgress || []).slice(0, 4).map((item) => (
+                  <div
+                    key={item.id}
+                    className="group bg-surface-container-low p-6 rounded-2xl border border-outline-variant/20 hover:border-outline/40 transition-colors"
                   >
-                    <div className="relative h-40 rounded-xl overflow-hidden mb-4 shadow-sm group-hover:shadow-xl transition-all duration-500">
-                      {bookmark.posts?.cover_image_url ? (
-                        <img 
-                          src={bookmark.posts.cover_image_url} 
-                          alt=""
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-[#9e2016]/10 flex items-center justify-center">
-                          <span className="material-symbols-outlined text-4xl text-[#9e2016]/40">image</span>
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-black/30" />
-                      <span className="absolute bottom-3 left-3 bg-[#9bf6ba] text-[#0e7344] px-2 py-0.5 rounded text-[10px] font-bold">
-                        {bookmark.posts?.categories?.name_en || 'ARTICLE'}
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="space-y-2">
+                        <p className="text-[11px] uppercase tracking-[0.3em] text-on-surface-variant">{isEn ? 'Blog Progress' : '鍗氬杩涘害'}</p>
+                        <h4 className="text-xl font-serif font-black leading-tight text-on-surface">
+                          {lang === 'en' ? item.posts?.title_en : item.posts?.title_zh || item.posts?.title_en}
+                        </h4>
+                      </div>
+                      <Bookmark className="w-5 h-5 text-primary/50" />
+                    </div>
+                    <div className="flex items-center justify-between text-sm text-on-surface-variant">
+                      <span>{item.progress_percent ?? 0}%</span>
+                      <span className="flex items-center gap-1 text-primary font-semibold">
+                        <ArrowRight className="w-4 h-4" />
+                        {isEn ? 'Continue' : '缁х画' }
                       </span>
                     </div>
-                    <h4 className="text-lg font-bold leading-snug group-hover:text-[#9e2016] transition-colors">
-                      {isEn ? bookmark.posts?.title_en : bookmark.posts?.title_zh}
-                    </h4>
-                  </Link>
-                )) : (
-                  <div className="snap-start min-w-[280px] flex-shrink-0">
-                    <div className="h-40 rounded-xl bg-[#f5f3f0] flex items-center justify-center mb-4">
-                      <span className="material-symbols-outlined text-4xl text-[#59413d]/40">bookmark_border</span>
-                    </div>
-                    <p className="text-sm text-[#59413d]">No bookmarks yet</p>
                   </div>
+                ))}
+                {(recentProgress?.length || 0) === 0 && (
+                  <p className="text-sm text-on-surface-variant col-span-2">{isEn ? 'No progress yet.' : '杩涘害鏈紑濮嬨€?}</p>
                 )}
               </div>
-            </section>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-              <section>
-                <h3 className="text-3xl font-bold mb-8">Reading History 历史</h3>
-                
-                <div className="space-y-6">
-                  {recentProgress && recentProgress.length > 0 ? recentProgress.map((progress: any) => (
-                    <Link 
-                      key={progress.id} 
-                      href={`/${lang}/blog/${progress.posts?.id}`}
-                      className="flex items-center gap-4 bg-white p-4 rounded-xl group cursor-pointer border-b border-[#e1bfb9]/10"
-                    >
-                      <div className="w-12 h-12 bg-[#c0392b]/20 rounded flex items-center justify-center text-[#9e2016]">
-                        <span className="material-symbols-outlined">edit_note</span>
-                      </div>
-                      <div className="flex-grow">
-                        <h5 className="font-bold text-sm">
-                          {isEn ? progress.posts?.title_en : progress.posts?.title_zh}
-                        </h5>
-                        <div className="flex items-center gap-3 mt-1">
-                          <div className="flex-grow h-1 bg-[#eae8e5] rounded-full">
-                            <div 
-                              className={`h-full ${progress.completed ? 'bg-[#006d3f]' : 'bg-[#9e2016]'} rounded-full`} 
-                              style={{ width: `${progress.progress_percent || 0}%` }} 
-                            />
-                          </div>
-                          <span className="text-[10px] text-[#59413d]">
-                            {progress.completed ? 'Done' : `${progress.progress_percent || 0}%`}
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
-                  )) : (
-                    <div className="flex items-center gap-4 bg-white p-4 rounded-xl border-b border-[#e1bfb9]/10">
-                      <div className="w-12 h-12 bg-[#e4e2df] rounded flex items-center justify-center text-[#59413d]">
-                        <span className="material-symbols-outlined">menu_book</span>
-                      </div>
-                      <div className="flex-grow">
-                        <h5 className="font-bold text-sm text-[#59413d]">Start reading to track progress</h5>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </section>
-
-              <section>
-                <h3 className="text-3xl font-bold mb-8">Achievements 成就</h3>
-                
-                <div className="grid grid-cols-3 gap-6">
-                  {userBadges && userBadges.length > 0 ? userBadges.slice(0, 6).map((badge: any, index: number) => (
-                    <div key={badge.badge_id} className="flex flex-col items-center gap-2 group">
-                      <div className={`w-20 h-20 ${index === 0 ? 'bg-[#c0392b]' : index === 1 ? 'bg-[#9bf6ba]' : 'bg-[#ffdfa0]'} rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
-                        <span className="material-symbols-outlined text-4xl" style={{ 
-                          color: index === 0 ? '#ffffff' : index === 1 ? '#0e7344' : '#694d00',
-                          fontVariationSettings: "'FILL' 1"
-                        }}>
-                          {index === 0 ? 'brush' : index === 1 ? 'explore' : 'workspace_premium'}
-                        </span>
-                      </div>
-                      <span className="text-[10px] font-bold text-[#9e2016]">{badge.badges?.name}</span>
-                    </div>
-                  )) : (
-                    <>
-                      <div className="flex flex-col items-center gap-2 group">
-                        <div className="w-20 h-20 bg-[#c0392b] rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                          <span className="material-symbols-outlined text-4xl text-white" style={{ fontVariationSettings: "'FILL' 1" }}>brush</span>
-                        </div>
-                        <span className="text-[10px] font-bold text-[#9e2016]">Ink Master</span>
-                      </div>
-                      <div className="flex flex-col items-center gap-2 group">
-                        <div className="w-20 h-20 bg-[#9bf6ba] rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                          <span className="material-symbols-outlined text-4xl text-[#0e7344]" style={{ fontVariationSettings: "'FILL' 1" }}>explore</span>
-                        </div>
-                        <span className="text-[10px] font-bold text-[#006d3f]">Explorer</span>
-                      </div>
-                      <div className="flex flex-col items-center gap-2 grayscale group">
-                        <div className="w-20 h-20 bg-[#e4e2df] rounded-full flex items-center justify-center border-2 border-dashed border-[#8d706c] opacity-40">
-                          <span className="material-symbols-outlined text-4xl text-[#59413d]">draw</span>
-                        </div>
-                        <span className="text-[10px] text-[#59413d]">Calligrapher</span>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </section>
             </div>
 
-            {isAdmin && (
-              <section>
-                <div className="flex items-center gap-4 mb-8">
-                  <h3 className="text-3xl font-bold">Admin Panel 管理面板</h3>
-                  <div className="h-px flex-1 bg-[#e1bfb9]/20" />
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Link href={`/${lang}/admin/posts`} className="p-4 bg-[#efeeeb] hover:bg-[#9e2016] hover:text-white transition-all text-center rounded-xl">
-                    <span className="material-symbols-outlined text-2xl block mb-2">article</span>
-                    <span className="text-sm font-medium">Manage Posts</span>
-                  </Link>
-                  <Link href={`/${lang}/admin/users`} className="p-4 bg-[#efeeeb] hover:bg-[#9e2016] hover:text-white transition-all text-center rounded-xl">
-                    <span className="material-symbols-outlined text-2xl block mb-2">group</span>
-                    <span className="text-sm font-medium">Manage Users</span>
-                  </Link>
-                  <Link href={`/${lang}/admin/landmarks`} className="p-4 bg-[#efeeeb] hover:bg-[#9e2016] hover:text-white transition-all text-center rounded-xl">
-                    <span className="material-symbols-outlined text-2xl block mb-2">location_on</span>
-                    <span className="text-sm font-medium">Manage Landmarks</span>
-                  </Link>
-                  <Link href={`/${lang}/admin/lessons`} className="p-4 bg-[#efeeeb] hover:bg-[#9e2016] hover:text-white transition-all text-center rounded-xl">
-                    <span className="material-symbols-outlined text-2xl block mb-2">school</span>
-                    <span className="text-sm font-medium">Manage Lessons</span>
-                  </Link>
-                </div>
-              </section>
-            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {(recentProgress || []).slice(0, 2).map((item) => (
+                <Link
+                  key={item.id}
+                  href={`/${lang}/blog/${item.content_id}`}
+                  className="group relative overflow-hidden rounded-[28px] bg-on-surface text-background min-h-[240px] shadow-[0_30px_60px_-28px_rgba(0,0,0,0.55)]"
+                >
+                  <div
+                    className="absolute inset-0 opacity-60 bg-cover bg-center"
+                    style={{ backgroundImage: `url(${item.posts?.cover_image_url || 'https://images.unsplash.com/photo-1529429617124-aee1f1650a5c?auto=format&fit=crop&w=1200&q=80'})` }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/5" />
+                  <div className="absolute inset-0 p-8 flex flex-col justify-between z-10">
+                    <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.3em] text-white/70">
+                      <MapPin className="w-4 h-4" />
+                      {item.content_type || 'Blog'}
+                    </div>
+                    <div>
+                      <h4 className="text-2xl font-serif font-black mb-2 leading-tight">
+                        {lang === 'en' ? item.posts?.title_en : item.posts?.title_zh || item.posts?.title_en}
+                      </h4>
+                      <p className="text-sm text-white/80">{isEn ? 'Continue reading' : '缁х画闃呰'}</p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </main>
 
-      <footer className="bg-[#FAF8F5] w-full pt-16 pb-8 px-8 mt-12 border-t border-[#e1bfb9]/10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 max-w-7xl mx-auto">
-          <div className="md:col-span-1">
-            <h4 className="text-xl text-[#9e2016] mb-4">ChinaVerse 中华宇宙</h4>
-            <p className="text-xs text-[#59413d]/60 leading-relaxed">
-              A sanctuary for the preservation and exploration of cultural heritage through modern design and shared wisdom.
-            </p>
+          {/* Right rail */}
+          <div className="space-y-8">
+            <div className="bg-surface-container-low p-8 rounded-3xl border border-outline-variant/35 shadow-[0_22px_44px_-28px_rgba(27,28,26,0.2)]">
+              <div className="flex items-center gap-3 mb-4">
+                <BookMarked className="w-6 h-6 text-primary" />
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.3em] text-on-surface-variant">{isEn ? 'Bookmarks' : '涔︾'}</p>
+                  <h4 className="text-xl font-serif font-black text-on-surface">{isEn ? 'Save for later' : '淇濈暀鏈€鍚庝細瑙併€?}</h4>
+                </div>
+              </div>
+              <div className="space-y-4">
+                {bookmarks?.length ? bookmarks.map((bookmark) => (
+                  <Link
+                    key={bookmark.id}
+                    href={`/${lang}/blog/${bookmark.posts?.id}`}
+                    className="group flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container-lowest transition-colors"
+                  >
+                    <div className="w-12 h-12 rounded-lg bg-surface-container-lowest shadow-inner flex items-center justify-center text-primary">
+                      <BookOpen className="w-5 h-5" />
+                    </div>
+                    <div className="leading-tight">
+                      <p className="text-sm font-semibold text-on-surface group-hover:text-primary line-clamp-1">
+                        {lang === 'en' ? bookmark.posts?.title_en : bookmark.posts?.title_zh || bookmark.posts?.title_en}
+                      </p>
+                      <p className="text-xs text-on-surface-variant">{bookmark.posts?.categories?.name_en || 'Culture'}</p>
+                    </div>
+                  </Link>
+                )) : (
+                  <p className="text-sm text-on-surface-variant">{isEn ? 'No bookmarks yet.' : '鏆備笉鏈夋墦鏂囧凡淇濈暀銆?}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="bg-surface-container-lowest p-8 rounded-3xl border border-outline-variant/35 shadow-[0_22px_44px_-28px_rgba(27,28,26,0.2)]">
+              <div className="flex items-center gap-3 mb-4">
+                <Crown className="w-6 h-6 text-tertiary" />
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.3em] text-on-surface-variant">{isEn ? 'Latest Badges' : '鏈€鏂板堜唤'}</p>
+                  <h4 className="text-xl font-serif font-black text-on-surface">{isEn ? 'Ink & Jade' : '榛勮禌鏂囩帇'}</h4>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {userBadges?.length ? userBadges.map((badge) => (
+                  <div
+                    key={badge.badge_id}
+                    className="group p-4 rounded-2xl bg-surface-container hover:bg-primary/5 transition-colors border border-outline-variant/20"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-2">
+                      <Award className="w-5 h-5" />
+                    </div>
+                    <p className="text-sm font-semibold text-on-surface leading-tight line-clamp-2">{badge.badges?.name || 'Badge'}</p>
+                    <p className="text-xs text-on-surface-variant mt-1">{isEn ? 'Earned' : '宸插姞鍏?}</p>
+                  </div>
+                )) : (
+                  <p className="text-sm text-on-surface-variant col-span-2">{isEn ? 'No badges yet.' : '鏆備笉鏈夊堜唤銆?}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="bg-surface-container-low p-8 rounded-[28px] border border-outline-variant/35 shadow-[0_22px_44px_-28px_rgba(27,28,26,0.2)] space-y-3">
+              <div className="flex items-center gap-3">
+                <Compass className="w-6 h-6 text-secondary" />
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.3em] text-on-surface-variant">{isEn ? 'Journey' : '杩愬姩'}</p>
+                  <h4 className="text-xl font-serif font-black text-on-surface">{isEn ? 'The Living Scroll' : '娲荤潃鐨勬帓鐗?}</h4>
+                </div>
+              </div>
+              <p className="text-sm text-on-surface-variant leading-relaxed">
+                {isEn ? 'Keep exploring cultural landmarks, lessons, and stories. Your progress syncs across devices.' : '缁х画鎺㈢储鏂囧寲鍦板潃鍜岀敾鍗帮紝杩涘害鍏ㄩ儴璁块棶璇锋眰鍦ㄦ墜鏈鸿€屽紑鍙戣褰曞悓姝ャ€?}
+              </p>
+              <div className="mt-4 flex flex-col gap-3 text-sm text-on-surface-variant">
+                <JourneyItem icon={<Palette className="w-4 h-4 text-tertiary" />} text={isEn ? 'Ink your journey with new lessons weekly.' : '姣忔湀鏂板鎴愬憳鎵撴帓灏忔椂鍗?} />
+                <JourneyItem icon={<MapPin className="w-4 h-4 text-secondary" />} text={isEn ? 'Discover Sichuan routes curated for culture lovers.' : '娲诲姩鎯婂熀鏈瀽鑱旂敾鍗板浗閭彂鐜板垪琛岃禌璐存柟鍧愩€?} />
+                <JourneyItem icon={<ScrollText className="w-4 h-4 text-primary" />} text={isEn ? 'Read bilingual editorials crafted with local experts.' : '闃呰鍚堝悓瀹跺涵涓撴満鍛樼殑鍙樺寲鏁堟灉銆?} />
+              </div>
+            </div>
           </div>
-          <div>
-            <h5 className="text-xs font-bold uppercase tracking-widest mb-4 opacity-50">Discovery</h5>
-            <ul className="space-y-2 text-sm">
-              <li><Link href={`/${lang}/landmarks`} className="text-[#1b1c1a]/60 hover:text-[#9e2016] transition-colors">Cultural Heritage 遗产</Link></li>
-              <li><a href="https://bilibili.com" className="text-[#1b1c1a]/60 hover:text-[#9e2016] transition-colors">Bilibili 哔哩哔哩</a></li>
-            </ul>
-          </div>
-          <div>
-            <h5 className="text-xs font-bold uppercase tracking-widest mb-4 opacity-50">Support</h5>
-            <ul className="space-y-2 text-sm">
-              <li><Link href={`/${lang}/settings`} className="text-[#1b1c1a]/60 hover:text-[#9e2016] transition-colors">Privacy 隐私</Link></li>
-              <li><span className="text-[#1b1c1a]/60">Contact 联系</span></li>
-            </ul>
-          </div>
-          <div className="text-right flex flex-col justify-end">
-            <p className="text-[10px] text-[#59413d]/40">
-              © 2026 ChinaVerse 中华宇宙. The Living Scroll Experience.
-            </p>
-          </div>
-        </div>
-      </footer>
+        </section>
+      </main>
+    </div>
+  );
+}
+
+function StatCard({ title, value, accent, icon }: { title: string; value: number; accent: 'primary' | 'secondary' | 'tertiary'; icon: ReactNode }) {
+  const accentClasses = {
+    primary: 'border-l-4 border-primary bg-surface-container-low',
+    secondary: 'border-l-4 border-secondary bg-surface-container-low',
+    tertiary: 'border-l-4 border-tertiary bg-surface-container-low',
+  }[accent];
+
+  const tint = {
+    primary: 'text-primary',
+    secondary: 'text-secondary',
+    tertiary: 'text-tertiary',
+  }[accent];
+
+  return (
+    <div className={`${accentClasses} p-8 rounded-2xl shadow-[0_24px_60px_-30px_rgba(27,28,26,0.25)] flex items-center gap-6`}>
+      <div className={`w-14 h-14 rounded-full bg-white flex items-center justify-center ${tint}`}>
+        {icon}
+      </div>
+      <div>
+        <div className="text-3xl font-bold">{value}</div>
+        <div className="text-xs uppercase tracking-widest text-on-surface-variant">{title}</div>
+      </div>
+    </div>
+  );
+}
+
+function JourneyItem({ icon, text }: { icon: ReactNode; text: string }) {
+  return (
+    <div className="flex items-center gap-2">
+      {icon}
+      <span>{text}</span>
     </div>
   );
 }
