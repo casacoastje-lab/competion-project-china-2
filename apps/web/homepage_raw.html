@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ChinaVerse 中华宇宙 | The Living Scroll</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&amp;family=Noto+Sans+SC:wght@300;400;500;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary": "#ffffff",
+                      "surface-tint": "#b02d21",
+                      "on-tertiary-container": "#ffe8be",
+                      "secondary": "#006d3f",
+                      "on-secondary": "#ffffff",
+                      "on-background": "#1b1c1a",
+                      "on-surface": "#1b1c1a",
+                      "on-primary-fixed-variant": "#8e130c",
+                      "on-secondary-fixed": "#00210f",
+                      "on-surface-variant": "#59413d",
+                      "surface-container-low": "#FAF8F5",
+                      "on-primary": "#ffffff",
+                      "surface-container-highest": "#e4e2df",
+                      "inverse-surface": "#30312f",
+                      "surface-container-high": "#eae8e5",
+                      "tertiary-fixed": "#ffdfa0",
+                      "primary": "#9e2016",
+                      "on-secondary-fixed-variant": "#00522e",
+                      "error": "#ba1a1a",
+                      "surface-variant": "#e4e2df",
+                      "tertiary": "#694d00",
+                      "background": "#FAF8F5",
+                      "tertiary-container": "#876400",
+                      "inverse-on-surface": "#f2f0ed",
+                      "inverse-primary": "#ffb4a9",
+                      "on-primary-container": "#ffe5e1",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-bright": "#FAF8F5",
+                      "on-primary-fixed": "#410000",
+                      "on-tertiary-fixed-variant": "#5c4300",
+                      "on-error": "#ffffff",
+                      "secondary-fixed-dim": "#80d9a0",
+                      "surface": "#FAF8F5",
+                      "secondary-container": "#9bf6ba",
+                      "surface-container": "#efeeeb",
+                      "surface-dim": "#dbdad7",
+                      "on-secondary-container": "#0e7344",
+                      "outline": "#8d706c",
+                      "primary-fixed": "#ffdad5",
+                      "error-container": "#ffdad6",
+                      "outline-variant": "#e1bfb9",
+                      "tertiary-fixed-dim": "#f6be39",
+                      "secondary-fixed": "#9bf6ba",
+                      "on-error-container": "#93000a",
+                      "primary-fixed-dim": "#ffb4a9",
+                      "primary-container": "#c0392b",
+                      "on-tertiary-fixed": "#261a00"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "fontFamily": {
+                      "headline": ["Noto Serif SC", "serif"],
+                      "body": ["Noto Sans SC", "sans-serif"],
+                      "label": ["Plus Jakarta Sans", "sans-serif"]
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        body {
+            font-family: "Noto Sans SC", sans-serif;
+            background-color: #FAF8F5;
+        }
+        .font-serif-sc {
+            font-family: "Noto Serif SC", serif;
+        }
+        .font-label {
+            font-family: "Plus Jakarta Sans", sans-serif;
+        }
+        .brush-border {
+            border-image: linear-gradient(to right, #9e2016, #694d00) 1;
+        }
+        .rice-paper-texture {
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuD-8AnS-_evFCvS3OVvijrJWG8UaP93Inmr10BhcXSNdVELSCyeE5usCV_BoD9gI-1N3NbkMxuodcfZY9g2hnD84GgMfg5IPsyWXmrkVQ3ebnmvQNuB2NEEOvXod-bMGY6QLuI_6py87_N-vjeMYgATvyi7S3ptW2AdTqXMJreLa8XGivopMuY006Qq00zfXQ4-PZMD7lXcRqbC4gz8VL3s9KLFPMoFbFaMY1-iulNY42MYr95xNn2P_BEKXIoPK7M57nYFjG3GEIun);
+            opacity: 0.2; /* Subtle texture on the solid color */
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+        }
+        .liubai-spacing {
+            padding: 8rem 0;
+        }
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+    </style>
+</head>
+<body class="bg-[#FAF8F5] text-on-surface selection:bg-primary/20">
+<div class="rice-paper-texture"></div>
+<!-- Navigation Header -->
+<nav class="fixed top-0 w-full z-50 bg-[#FAF8F5]/90 backdrop-blur-md">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-[1920px] mx-auto">
+<div class="flex items-center gap-8">
+<a class="text-2xl font-serif font-bold text-[#9e2016] tracking-tighter italic" href="#">ChinaVerse 中华宇宙</a>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-[#9e2016] font-bold border-b-2 border-[#9e2016] pb-1 hover:text-[#9e2016] transition-all duration-300" href="#">Explore 探索</a>
+<a class="text-[#1b1c1a]/60 font-medium hover:text-[#9e2016] transition-all duration-300" href="#">Blog 博客</a>
+<a class="text-[#1b1c1a]/60 font-medium hover:text-[#9e2016] transition-all duration-300" href="#">Learn 学习</a>
+<a class="text-[#1b1c1a]/60 font-medium hover:text-[#9e2016] transition-all duration-300" href="#">Map 地图</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<span class="text-xs font-label uppercase tracking-widest text-on-surface-variant/70">EN | 中</span>
+<div class="h-10 w-[1px] bg-outline-variant/30 hidden md:block"></div>
+<button class="flex items-center gap-2 group">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">account_circle</span>
+<span class="text-sm font-label font-bold text-primary">Login 登录</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="relative overflow-hidden">
+<!-- Section 1: Hero -->
+<section class="relative h-screen flex items-center justify-center pt-20 px-8 overflow-hidden bg-[#FAF8F5]">
+<div class="absolute inset-0 z-0">
+<!-- Changed gradient from complex to simple fade to match solid background theme -->
+<div class="absolute inset-0 bg-gradient-to-r from-[#FAF8F5] via-transparent to-[#FAF8F5] z-10"></div>
+<img class="w-full h-full object-cover opacity-50 scale-105 grayscale-[0.3]" data-alt="Cinematic wide shot of misty Huangshan mountains with ancient pine trees and traditional ink painting aesthetic soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDUb1s7XX5cxOqhMkv7gluLN0_HglQ4XvZwKxg7lVM3FY6jFXcIh89u4B-58KiB1rPvKTUOcN5St8arSNzFC26i2Ji7qkAtA1yurS4gAXsJjqZdibblBjoSRNA-LOTjCNMINBxq4_9j2jyFVvSWHUks0qyUmpvapb8LMjVMRnriiI3ZnYUpIgyjMiPhZCJD-dTIzmBdqRZnMqy3ECo7qdSKjD6T0hdHtjZINueNpfOBNJN_VDstDJue3aKdnpaZXacn9PKsXiAbWjY"/>
+</div>
+<div class="relative z-20 text-center max-w-5xl">
+<div class="flex justify-center mb-6">
+<span class="vertical-text text-primary font-serif-sc text-2xl tracking-[0.5em] opacity-80 leading-none">五千年文明</span>
+</div>
+<h1 class="font-serif-sc text-7xl md:text-9xl font-black text-on-surface tracking-tight mb-8">
+                    ChinaVerse <span class="text-primary block md:inline">中华宇宙</span>
+</h1>
+<div class="relative max-w-2xl mx-auto group">
+<input class="w-full bg-white/90 backdrop-blur-md border border-outline-variant/30 px-8 py-5 rounded-full text-lg shadow-xl shadow-primary/5 focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Explore the Living Scroll... 探索活着的画卷..." type="text"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 bg-primary text-on-primary p-3 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+</div>
+<div class="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce">
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</section>
+<!-- Section 2: Featured Blog Posts Grid -->
+<section class="liubai-spacing px-8 max-w-7xl mx-auto bg-[#FAF8F5]">
+<div class="flex justify-between items-end mb-16">
+<div>
+<h2 class="font-serif-sc text-4xl font-bold mb-2">Editor's Journal <span class="text-primary">编辑期刊</span></h2>
+<p class="text-on-surface-variant font-body">Deep dives into the threads of Chinese heritage.</p>
+</div>
+<button class="text-primary font-label text-sm font-bold border-b border-primary pb-1">View Archive 存档</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<!-- Card 1 -->
+<div class="group relative space-y-6">
+<div class="aspect-[4/5] overflow-hidden rounded-lg bg-surface-container">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Exquisite close up of song dynasty celadon ceramics with soft focus and moody dramatic museum lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFzIJBAIlSrusHnwMwIhz0Vuvv_DkWGE5M00fGisIqf1PUP9uyjk8_qJ4M4TVKrf9t74e1uiZKVKQ4DJc9qRY4NRgWwEhayoUJg_iE3Yfx5Gp56bdjCykFaiAvKJyHIucGzSezs9WTSkaqpEoh-BnySNgMZckxV0loXytVsdkyZ8zIyzwxV-FXxLrNUyTdn08Amg6GhW24RotlJkZu4lhHOaLG2EFz_F4AF6zs1MNg-0TRUHwfZKoHA2rFqqyitv4lOmIjw5gZLvl2"/>
+</div>
+<div class="space-y-3">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-label font-bold">
+                            ART &amp; CRAFT 艺术
+                        </span>
+<h3 class="font-serif-sc text-2xl font-bold group-hover:text-primary transition-colors leading-tight">
+                            The Silent Language of Celadon <br/>青瓷的无声语言
+                        </h3>
+<div class="flex items-center gap-3 pt-4">
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden">
+<img data-alt="portrait of a Chinese scholar in modern minimal studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4G-ccGCXLvL57K1L1j50f_dYBF592bzzn9kmyGB-6Ct4umuWLRRuuRO8obrpkNstCBN_WNDzpYAPPwhIovbpKlPA_IL7PCXu5jbPRDMfbxpxoqM8zSgJlMAaCrPdsXsK4mn_j3L0tMUHFtuCBMV0lqsZXw_MoWT8XoUQ6fafeh09bT1nRMI8nSrhDXaPXeu7sMUc0td1ou18itduEGff9485GKxAchzD8EJFI_VMBZZuu5oHRxHmDOTUgqgEYKU5oFv_M8lanZM1B"/>
+</div>
+<div>
+<p class="text-xs font-bold font-label">Dr. Wei Chen</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest">8 min read · 8分钟阅读</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group relative space-y-6 md:translate-y-12">
+<div class="aspect-[4/5] overflow-hidden rounded-lg bg-surface-container">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="High quality photography of traditional silk weaving looms with vibrant red and gold silk threads" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJNJF64n8jUB4h5NaayO2J9VtQ60sQT60pv1X5NkC7euYOwV_LV-niZqmY-b9IhprzwsK7KWIjdvTAV_NA_560LOkXjGThJV8fezoGxqUCzYo6VecF4qsl-uN01lE71R7xS_PEqshZT_e_5SAWZKygv_oha-kFTg7K8fSRjaGKVSGLI0GWYurxcfcn8psR9U_LUn3eXiXfDwFZIPBZDRWTOj_0nQRH1osEAyXiRmofYhUr1QEONuMSPyfJu6BaOjf_ARmBffYoIGa2"/>
+</div>
+<div class="space-y-3">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-label font-bold">
+                            TEXTILES 丝绸
+                        </span>
+<h3 class="font-serif-sc text-2xl font-bold group-hover:text-primary transition-colors leading-tight">
+                            Silk Roads: Weaving the Future <br/>丝绸之路：编织未来
+                        </h3>
+<div class="flex items-center gap-3 pt-4">
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden">
+<img data-alt="Portrait of a female traveler with mountains in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAY_VjEVBcLhv9Wi8jXZ945y5EszU6XYAEBR9nxYizsj-7jBwMaza57cYZxcL9cxQRW6se6QaBkqxvDFbPo52uwuRxizFLZ3mPTiqcjpjjPnawmnO2BSmuPXtuN1f3VOr322QEbvC-IQgGerAwI5J-8mAAQ34r7QyzQoM1CPrVTLyI4vmZ9gVBqF1KC7BfjPXbF5_Y_DrKiSFpz2LFtbq1Gxa3H2hSyTo3NeymI1UToGCJK54nn-Z34xhR70LDRFgkQsLwwVTP7vIUc"/>
+</div>
+<div>
+<p class="text-xs font-bold font-label">Lina Zhang</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest">12 min read · 12分钟阅读</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="space-y-6">
+<div class="aspect-[4/5] rounded-lg bg-surface-container-highest/20 animate-pulse flex items-center justify-center">
+<span class="material-symbols-outlined text-surface-container-highest text-5xl">image</span>
+</div>
+<div class="space-y-4">
+<div class="h-6 w-24 bg-surface-container rounded-full animate-pulse"></div>
+<div class="space-y-2">
+<div class="h-8 w-full bg-surface-container rounded animate-pulse"></div>
+<div class="h-8 w-2/3 bg-surface-container rounded animate-pulse"></div>
+</div>
+<div class="flex items-center gap-3 pt-4">
+<div class="w-10 h-10 rounded-full bg-surface-container animate-pulse"></div>
+<div class="h-4 w-24 bg-surface-container rounded animate-pulse"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Category Navigation -->
+<section class="liubai-spacing bg-[#FAF8F5] relative">
+<div class="px-8 max-w-7xl mx-auto">
+<div class="text-center mb-20">
+<span class="font-label text-sm text-tertiary font-bold tracking-[0.3em] uppercase">Ecosystem</span>
+<h2 class="font-serif-sc text-5xl font-black mt-4">Discover the Realms <span class="text-primary">发现领域</span></h2>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<!-- Category 1 -->
+<div class="col-span-2 md:row-span-2 relative group cursor-pointer overflow-hidden rounded-xl h-80 md:h-auto">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Aerial view of the Great Wall of China winding through green mountains at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBW2z3_5ga_BdN_8I-Nft2d3YwGfVe_tBhS7j44s2jF8oqUc_E-1C_zek_QjsOlWaJCjBssC9DlRchhIwCbp6VunF7XS0pb-5_OpDeEUxKMWb1444jDUtVMd73aWnPZwvkmd2X6OJasbsnhYAEVeFsgr0H_Ts1KIiVhP2vNQeGn1YCqzT8SpSlAy_nlBjPCcyADg6ZMvgAf0b4ihJ5KFWpMyqkpbBWeCdGWn1cwj0OTRYnxKkKlMCcEyj94F9h_bbupN7RRf4ZLGJji"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-6 left-6 text-white">
+<h4 class="font-serif-sc text-3xl font-bold">History &amp; Landmarks <br/>历史名胜</h4>
+</div>
+</div>
+<!-- Category 2 -->
+<div class="relative group cursor-pointer overflow-hidden rounded-xl h-64 bg-white border border-outline-variant/20 p-6 flex flex-col justify-between hover:bg-primary transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20">
+<span class="material-symbols-outlined text-4xl text-primary group-hover:text-white transition-colors" data-weight="fill">brush</span>
+<h4 class="font-serif-sc text-xl font-bold group-hover:text-white transition-colors">Language &amp; Calligraphy <br/>语言书法</h4>
+</div>
+<!-- Category 3 -->
+<div class="relative group cursor-pointer overflow-hidden rounded-xl h-64 bg-white border border-outline-variant/20 p-6 flex flex-col justify-between hover:bg-secondary transition-all duration-500 hover:shadow-2xl hover:shadow-secondary/20">
+<span class="material-symbols-outlined text-4xl text-secondary group-hover:text-white transition-colors" data-weight="fill">temple_buddhist</span>
+<h4 class="font-serif-sc text-xl font-bold group-hover:text-white transition-colors">Food &amp; Traditions <br/>饮食传统</h4>
+</div>
+<!-- Category 4 -->
+<div class="relative group cursor-pointer overflow-hidden rounded-xl h-64 bg-white border border-outline-variant/20 p-6 flex flex-col justify-between hover:bg-tertiary transition-all duration-500 hover:shadow-2xl hover:shadow-tertiary/20">
+<span class="material-symbols-outlined text-4xl text-tertiary group-hover:text-white transition-colors" data-weight="fill">music_note</span>
+<h4 class="font-serif-sc text-xl font-bold group-hover:text-white transition-colors">Art &amp; Music <br/>艺术音乐</h4>
+</div>
+<!-- Category 5 -->
+<div class="relative group cursor-pointer overflow-hidden rounded-xl h-64 bg-white border border-outline-variant/20 p-6 flex flex-col justify-between hover:bg-on-surface transition-all duration-500 hover:shadow-2xl hover:shadow-on-surface/20">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-white transition-colors" data-weight="fill">festival</span>
+<h4 class="font-serif-sc text-xl font-bold group-hover:text-white transition-colors">Festivals <br/>节日盛典</h4>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: Interactive China Map Preview -->
+<section class="liubai-spacing px-8 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-16 bg-[#FAF8F5]">
+<div class="w-full md:w-1/2 space-y-8">
+<h2 class="font-serif-sc text-5xl font-black leading-tight">Map of the Middle Kingdom <span class="text-primary text-3xl block">中华地图</span></h2>
+<p class="text-lg text-on-surface-variant font-body">An interactive atlas chronicling the dynastic shifts, trade routes, and geographical marvels of East Asia.</p>
+<div class="space-y-6">
+<div class="p-6 bg-white rounded-lg border border-outline-variant/20 border-l-4 border-primary shadow-sm">
+<p class="font-bold font-serif-sc mb-1">Current Focus: Xi'an (西安)</p>
+<p class="text-sm opacity-70">The eastern terminus of the Silk Road and home to the Terracotta Army.</p>
+<div class="mt-4 h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-3/4"></div>
+</div>
+<p class="mt-2 text-[10px] uppercase font-label tracking-widest text-primary">Mastery: 75%</p>
+</div>
+</div>
+</div>
+<div class="w-full md:w-1/2 relative aspect-square bg-white/50 rounded-full flex items-center justify-center p-12 border border-outline-variant/10">
+<div class="w-full h-full bg-cover opacity-60 mix-blend-multiply grayscale-[0.2]" data-location="China" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB6BEUhkZdJB8VdsewnTVsbyfnTyJGrEnPOsktBszZx4qcCISEsDAeEBQg96BDYrVYAPASs0wpZFPWQHzww0zwzknbKZCuBSK25osRSZdTEwIO0dqJ2-lxYcvJHolfnlGqC4cEUa_f4_VVRdqfdXlPSy7VMFWHvRFoHXKiXHll-ySj6YYT84N7UJ5PLzWcC_5HnqU6QVBkNx5je7tlB5ujMiCQOnXx7zXxrzwlfnhKUhGfO_AoBYPmfWeqNEhDwU34rdOwquF1sjUP2'); mask-image: radial-gradient(circle, black, transparent);">
+<!-- Landmark Pins -->
+<div class="absolute top-1/4 left-1/3 group cursor-pointer">
+<span class="material-symbols-outlined text-primary text-3xl group-hover:scale-125 transition-transform" data-weight="fill">location_on</span>
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-white text-xs px-3 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Beijing 北京</div>
+</div>
+<div class="absolute bottom-1/3 right-1/4 group cursor-pointer">
+<span class="material-symbols-outlined text-secondary text-3xl group-hover:scale-125 transition-transform" data-weight="fill">location_on</span>
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-white text-xs px-3 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Shanghai 上海</div>
+</div>
+</div>
+<!-- Radial Accent -->
+<div class="absolute inset-0 border-[40px] border-[#FAF8F5] pointer-events-none"></div>
+</div>
+</section>
+<!-- Section 5: Start Learning CTA -->
+<section class="liubai-spacing px-8 bg-[#FAF8F5]">
+<div class="max-w-5xl mx-auto bg-[#694d00] rounded-3xl p-12 md:p-24 relative overflow-hidden text-center text-on-tertiary shadow-2xl shadow-[#694d00]/20">
+<div class="absolute inset-0 opacity-10">
+<img class="w-full h-full object-cover" data-alt="Traditional gold leaf texture with cracks and aged patina" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGPTY8JWIy1ISI5Fh0lPXPHPdtUl8bhbd-vvjIIvGxd5R6StNNeVCKlqqVfvHlP4gvHIpxrCaW6_VXuKIoZfGft0sm_NJETq8nRPhb_s70_TQMqp5OHy5h3Evaj54cl3hHRSA0MMY7ZJYICjIO1OIg4QFRWAC_7KHcQ0mA668n5lNDuZFjJZd8dWyWOmN_r1wmG4g1DA-xCHmIw6hoAoBqiV9JR8w2azcd0pf06aFy2wyJ2h_2FSYZwCAiIBuwQ3GykE33coC4Q47N"/>
+</div>
+<div class="relative z-10 space-y-8">
+<h2 class="font-serif-sc text-4xl md:text-6xl font-black">Begin Your Immersion <br/><span class="opacity-80">开启您的沉浸之旅</span></h2>
+<p class="text-xl opacity-90 max-w-2xl mx-auto">Join a global community of modern calligraphers, historians, and explorers.</p>
+<div class="flex justify-center">
+<button class="bg-[#D4A017] text-on-surface px-12 py-5 rounded-full font-label font-bold text-lg hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-3">
+                            Start Learning 立即学习
+                            <span class="material-symbols-outlined">arrow_right_alt</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#FAF8F5] text-on-surface pt-16 pb-8 px-8 border-t border-outline-variant/10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 max-w-7xl mx-auto">
+<div class="space-y-4">
+<div class="text-xl font-serif text-[#9e2016] mb-4">ChinaVerse 中华宇宙</div>
+<p class="text-sm font-body text-on-surface-variant leading-relaxed">
+                    Preserving the intangible, celebrating the timeless. A digital scroll for the global citizen.
+                </p>
+</div>
+<div>
+<h5 class="font-label font-bold text-xs uppercase tracking-widest mb-6 opacity-60">Cultures 文化</h5>
+<ul class="space-y-4 text-sm font-body">
+<li><a class="hover:text-primary transition-colors" href="#">Cultural Heritage 遗产</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Dynastic Timeline 历代</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Philosophy 哲学</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-label font-bold text-xs uppercase tracking-widest mb-6 opacity-60">Social 社交</h5>
+<ul class="space-y-4 text-sm font-body">
+<li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#">Bilibili 哔哩哔哩</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">WeChat 微信</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Weibo 微博</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-label font-bold text-xs uppercase tracking-widest mb-6 opacity-60">Connect 联系</h5>
+<ul class="space-y-4 text-sm font-body">
+<li><a class="hover:text-primary transition-colors" href="#">Contact 联系</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy 隐私</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Terms 条款</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-7xl mx-auto mt-16 pt-8 border-t border-outline-variant/20 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-xs font-label text-on-surface-variant/60">
+                © 2024 ChinaVerse 中华宇宙. 京ICP备12345678号. The Living Scroll Experience.
+            </p>
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-xl opacity-40">landscape</span>
+<span class="material-symbols-outlined text-xl opacity-40">temple_buddhist</span>
+<span class="material-symbols-outlined text-xl opacity-40">palette</span>
+</div>
+</div>
+</footer>
+</body></html>

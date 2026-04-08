@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&amp;family=Noto+Sans+SC:wght@300;400;500;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#b02d21",
+                    "on-tertiary-container": "#ffe8be",
+                    "secondary": "#006d3f",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#1b1c1a",
+                    "on-surface": "#1b1c1a",
+                    "on-primary-fixed-variant": "#8e130c",
+                    "on-secondary-fixed": "#00210f",
+                    "on-surface-variant": "#59413d",
+                    "surface-container-low": "#FAF8F5",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#FAF8F5",
+                    "inverse-surface": "#30312f",
+                    "surface-container-high": "#FAF8F5",
+                    "tertiary-fixed": "#ffdfa0",
+                    "primary": "#9e2016",
+                    "on-secondary-fixed-variant": "#00522e",
+                    "error": "#ba1a1a",
+                    "surface-variant": "#FAF8F5",
+                    "tertiary": "#694d00",
+                    "background": "#FAF8F5",
+                    "tertiary-container": "#876400",
+                    "inverse-on-surface": "#f2f0ed",
+                    "inverse-primary": "#ffb4a9",
+                    "on-primary-container": "#ffe5e1",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#FAF8F5",
+                    "on-primary-fixed": "#410000",
+                    "on-tertiary-fixed-variant": "#5c4300",
+                    "on-error": "#ffffff",
+                    "secondary-fixed-dim": "#80d9a0",
+                    "surface": "#FAF8F5",
+                    "secondary-container": "#9bf6ba",
+                    "surface-container": "#FAF8F5",
+                    "surface-dim": "#FAF8F5",
+                    "on-secondary-container": "#0e7344",
+                    "outline": "#8d706c",
+                    "primary-fixed": "#ffdad5",
+                    "error-container": "#ffdad6",
+                    "outline-variant": "#e1bfb9",
+                    "tertiary-fixed-dim": "#f6be39",
+                    "secondary-fixed": "#9bf6ba",
+                    "on-error-container": "#93000a",
+                    "primary-fixed-dim": "#ffb4a9",
+                    "primary-container": "#c0392b",
+                    "on-tertiary-fixed": "#261a00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif SC", "serif"],
+                    "body": ["Noto Sans SC", "sans-serif"],
+                    "label": ["Plus Jakarta Sans", "sans-serif"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Noto Sans SC', sans-serif; background-color: #FAF8F5; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .brush-divider {
+            height: 2px;
+            background: #8d706c;
+            margin: 4rem 0;
+            opacity: 0.3;
+        }
+        .grain-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<div class="grain-overlay"></div>
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#FAF8F5]/90 backdrop-blur-md">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-[1920px] mx-auto">
+<div class="text-2xl font-serif font-bold text-[#9e2016] tracking-tighter italic">ChinaVerse 中华宇宙</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-[#1b1c1a]/60 font-medium hover:text-[#9e2016] transition-all duration-300" href="#">Explore 探索</a>
+<a class="text-[#9e2016] font-bold border-b-2 border-[#9e2016] pb-1 hover:text-[#9e2016] transition-all duration-300" href="#">Blog 博客</a>
+<a class="text-[#1b1c1a]/60 font-medium hover:text-[#9e2016] transition-all duration-300" href="#">Learn 学习</a>
+<a class="text-[#1b1c1a]/60 font-medium hover:text-[#9e2016] transition-all duration-300" href="#">Map 地图</a>
+</div>
+<div class="flex items-center gap-6">
+<span class="text-on-surface-variant font-label text-sm">EN | 中</span>
+<button class="material-symbols-outlined text-on-surface-variant">account_circle</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-label text-sm hover:opacity-90 active:scale-95 transition-all">Login 登录</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative w-full h-[716px] overflow-hidden mt-0">
+<img alt="Sichuan Temple" class="w-full h-full object-cover grayscale-[0.2] brightness-[0.8]" data-alt="atmospheric wide shot of ancient buddhist temple architecture nestled in misty sichuan mountains with weathered wood and ornate carvings" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDt2DK6aEKw8fr1Xym2JfX4k7xoWbd3O8QODSP1ucfQlDl9tr8pC-5lTt5PUgZR4pYE5US5RHII3a1ZsbpsoSpW-bwKirE83TcvZ1ALojP5W4TpXJpAIbRNbXxBeyTg0uqFlWOsUf_itjwLDzAbDzofw9ONjtzWuNWOZMwk2AwHyP31j41IoBgbjoXE2k7-LpTmq7g9Qt_VGZdkj9bC5k3k9JgTlaaSUwSUd_M_yrx685yVyFL01BL93TksBNIR0yetTROXc4vrFqEk"/>
+<div class="absolute inset-0 bg-[#FAF8F5]/10"></div>
+<div class="absolute bottom-12 left-0 w-full px-8 md:px-24">
+<div class="max-w-4xl">
+<span class="inline-block bg-secondary text-on-secondary px-3 py-1 rounded-full text-xs font-label uppercase tracking-widest mb-4">Cultural Heritage 遗产</span>
+<h1 class="text-5xl md:text-7xl font-headline font-black text-on-surface leading-tight tracking-tight italic drop-shadow-sm">The Hidden Temples of Sichuan | 四川隐秘寺庙</h1>
+</div>
+</div>
+</header>
+<!-- Main Content Grid -->
+<main class="max-w-7xl mx-auto px-8 py-20 grid grid-cols-1 lg:grid-cols-12 gap-16 relative">
+<!-- Language Toggle (Floating Sidebar Element) -->
+<div class="fixed bottom-10 right-10 z-40 lg:sticky lg:top-28 lg:bottom-auto lg:right-auto lg:col-span-1">
+<div class="flex flex-col gap-4 items-center">
+<button class="w-14 h-14 rounded-full bg-white shadow-lg flex flex-col items-center justify-center border border-outline-variant/20 hover:border-primary/40 transition-all group">
+<span class="text-[10px] font-label font-bold text-primary">EN</span>
+<div class="w-4 h-[1px] bg-outline-variant/40 my-0.5"></div>
+<span class="text-[12px] font-headline font-bold text-on-surface">中</span>
+</button>
+<div class="flex flex-col gap-6 text-on-surface-variant/40 mt-8">
+<button class="material-symbols-outlined hover:text-primary transition-colors">share</button>
+<button class="material-symbols-outlined hover:text-primary transition-colors" data-weight="fill">bookmark</button>
+<button class="material-symbols-outlined hover:text-primary transition-colors" data-weight="fill">favorite</button>
+</div>
+</div>
+</div>
+<!-- Article Body -->
+<article class="lg:col-span-8 space-y-12">
+<div class="prose prose-lg max-w-none text-on-surface leading-relaxed font-body">
+<p class="text-xl font-medium leading-loose text-on-surface/90 italic first-letter:text-6xl first-letter:font-headline first-letter:mr-3 first-letter:float-left first-letter:text-primary">
+                    In the misty serrated peaks of the Min Mountains, where the air grows thin and the fragrance of wild incense lingers, lie the forgotten sanctuaries of old Sichuan. These are not the bustling tourist stops of Chengdu, but quiet, moss-covered timber monuments standing defiant against time.
+                </p>
+<h2 class="text-3xl font-headline font-bold text-on-surface mt-16 mb-6">The Architecture of Silence 沉默的建筑</h2>
+<p>Most of these structures date back to the late Ming dynasty, characterized by their unique cantilevered roofs and intricate "Dougong" brackets that seem to mimic the surrounding pine branches. Walking through the main gate of <em>Wanyue Temple</em>, one is struck by the intentional use of negative space—the 'Liubai' that allows the mountain fog to become part of the temple's internal courtyard.</p>
+<div class="my-12 border-l-4 border-tertiary pl-8 py-4 bg-[#FAF8F5] italic border-opacity-30">
+<p class="text-tertiary-container text-2xl font-headline leading-snug">"The mountain does not speak, yet it holds all the scriptures of the world." — Anonymous Monk</p>
+<span class="text-sm font-label text-on-surface-variant mt-2 block">— 大山无言，却藏世间经。</span>
+</div>
+<p>The murals here, though faded by centuries of humidity, still glow with the deep crimsons of cinnabar and the cool greens of crushed malachite. They depict local legends—serpent deities that protect the mountain springs and the migration of the first settlers from the eastern plains.</p>
+<div class="grid grid-cols-2 gap-4 my-12">
+<div class="space-y-4">
+<img alt="Detail 1" class="rounded-lg w-full h-80 object-cover" data-alt="close-up of intricate ancient chinese roof brackets with weathered red paint and wood grain texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFxDoIALfqXMTKXRJ1JdRd0SF3GRIPgdDEJ4AK5GKxeDOdbqdVUqLCCmlS5yWAvKluKI3Krb3fmURzvqtp0sH4Etl9s4msi0l5tUlsP83WgpHjsOuh37hpRQg2poHSj9P1lN4v7rJHKHoq7wekaN5C6BMOZV0j926V2xFZ691-9pNPoJvqR60u7hWAMwPeFzNtsUdMJfggYVBkGxz627PeOpuSFEC0SI8kE4b48S0mvvzXxQ2kbGsb528KdCf001BmFzLspRqxAm2N"/>
+<p class="text-xs font-label text-on-surface-variant/60">Dougong brackets at Wanyue Temple / 万岳寺斗拱细节</p>
+</div>
+<img alt="Pagoda" class="rounded-lg w-full h-full object-cover" data-alt="vertical shot of a solitary temple pagoda rising through thick forest mist in the morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxn4pS-BS1caJwT_lB3Wc5KpgK73zmJsLq7_VXM8JSMjuP7V0cvGE3rMVz-3-TTUddn17wOvpqyAQSbJtoFnjnKZ4Aow0KTNkJlgISRKeGlwvNwPOLhcD9CkpUsHybmmK5mBfPlYkJOwdBED2CccWzwFZK16t7jxDZwNF8nhQGbqY6J7rRiAA5REMYj9_A7GpBWVmyg4zNHnekj3ZDWNVe04LvLiet8fJgcjS62bR5mur97vdSXTAerelni7Hro4kk1CKFh2o8CYBJ"/>
+</div>
+<h3 class="text-2xl font-headline font-bold text-on-surface">Preservation and the Path Ahead 保护与前路</h3>
+<p>Today, a small community of artisan woodworkers and monks work tirelessly to restore these structures using only traditional joinery. There are no nails here; only the perfect marriage of mortise and tenon, held together by the gravity of the earth and the skill of the human hand.</p>
+</div>
+<!-- Brush Divider -->
+<div class="brush-divider"></div>
+<!-- Comment Section -->
+<section class="space-y-10">
+<div class="flex items-center justify-between">
+<h3 class="text-2xl font-headline font-bold">Reflections 讨论 (12)</h3>
+<button class="text-primary font-label text-sm flex items-center gap-2">
+                        Sort by Newest <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+</div>
+<!-- Comment Input -->
+<div class="bg-white p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<textarea class="w-full bg-transparent border-none focus:ring-0 text-on-surface font-body resize-none" placeholder="Share your thoughts... 分享你的见解" rows="3"></textarea>
+<div class="flex justify-between items-center mt-4 pt-4 border-t border-outline-variant/10">
+<div class="flex gap-4">
+<button class="material-symbols-outlined text-on-surface-variant/60 hover:text-primary transition-colors">image</button>
+<button class="material-symbols-outlined text-on-surface-variant/60 hover:text-primary transition-colors">sentiment_satisfied</button>
+</div>
+<button class="bg-primary text-on-primary px-8 py-2 rounded-lg font-label text-sm">Post Comment 发帖</button>
+</div>
+</div>
+<!-- Comments Threads -->
+<div class="space-y-8">
+<!-- Parent Comment -->
+<div class="flex gap-6">
+<img alt="User" class="w-12 h-12 rounded-full object-cover shrink-0" data-alt="portrait of a middle-aged scholar with glasses in a soft lit library setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB92ZXoUvUxkxoVXPM49j9xJXfoQNnBvNg5DBrhIezzufHIqwikHgT5PC4F_I_vdJt3Yl5fMywTnZk_y3Lyd3wo_5bR7_c-TP6fQj3E7ghrlIuVrKOpw89g7A3IjRyAOru0VI0G_yojPeDeYmg4MAkEG1VU3ExzhukWHqrGQ6nvCYx9pYC4TIi4hDQMCBBgxBmvteZwu6Rq72bKrZRLsDL_IFKMo6EY3LupBmqOl9JyyFu6m4mSm-hNux5vRXn2U61a_oUZrrXBJYv8"/>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<span class="font-bold text-on-surface">Li Wei 李伟</span>
+<span class="bg-secondary-container text-on-secondary-container text-[10px] font-label px-2 py-0.5 rounded-full uppercase tracking-tighter">Historian 历史学者</span>
+<span class="text-xs text-on-surface-variant/40 font-label">2h ago</span>
+</div>
+<p class="text-on-surface/80 leading-relaxed">The mention of Wanyue Temple is crucial. Its location was historically a pivot point for the Tea-Horse Road. Great photography.</p>
+<div class="flex gap-6 text-xs font-label text-on-surface-variant">
+<button class="flex items-center gap-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-sm">thumb_up</span> 24</button>
+<button class="hover:text-primary transition-colors">Reply 回复</button>
+</div>
+<!-- Nested Reply -->
+<div class="flex gap-6 mt-6 pl-10 border-l border-outline-variant/20">
+<img alt="User" class="w-10 h-10 rounded-full object-cover shrink-0" data-alt="close up headshot of a young creative woman with artistic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOpkm-_0nkjO2W4DBBcDJoKdD92YVKsCRfbCyKip_kGrmz_gGBcUVej5yvc70QheXE2kLpCA-tJoId_jxf9AI1IKMZdmN64LAZXpEfni-AiNIZW56liSfhJ5Eg_jqZ0VkY6Jyzc80ivyb9SiQp-G2phoZDc9EHMEbcP2KIt11Dqg9gIvzicUwewzwJUbDhYiTHsNM9YMk7aQ_3inJtpgcXlzCkyRT0af7xrNU8MyqQ6HTk5rKSbFFi3a2ngKSkeTU7z5EupBaUp0Ic"/>
+<div class="space-y-2">
+<div class="flex items-center gap-3">
+<span class="font-bold text-on-surface">Chen Xiao 陈晓</span>
+<span class="text-xs text-on-surface-variant/40 font-label">1h ago</span>
+</div>
+<p class="text-on-surface/80">Indeed! I visited last autumn and the Malachite pigments are even more vibrant in person.</p>
+<div class="flex gap-4 text-xs font-label text-on-surface-variant">
+<button class="flex items-center gap-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-sm">thumb_up</span> 8</button>
+<button class="hover:text-primary transition-colors">Reply</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</article>
+<!-- Sidebar -->
+<aside class="lg:col-span-3 space-y-12">
+<!-- Author Card -->
+<div class="bg-white p-8 rounded-xl space-y-6 border border-outline-variant/5">
+<div class="flex flex-col items-center text-center space-y-4">
+<img alt="Author" class="w-24 h-24 rounded-full object-cover ring-4 ring-[#FAF8F5] shadow-lg" data-alt="professional headshot of a travel writer in their late twenties with a friendly expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj3BFve5vysOa-Yiv5PeCZUGFcwnlwK-w7MFOKhmk3kz7ezzaJNDWHpYKIx9Ray1vduqpAn1S83xuqhqQWR3TB7FWTmMwrm0rnIj_Qc0BEI5XpaJLkQNAuMiXO2zC2biJItXN7Q3cnWFgt4MgE08vh_dIbml-aQ_W7s_5HV2JX20nj2bGcLFhK1zPM0j3NzxJq5QeGEDAFRiCC6VP6jd9Y6VIFMGjro5iTuk0zlvezPh93BFv2bsYRst0zS29-uajwfW4Wr1t5YPxJ"/>
+<div>
+<h4 class="text-xl font-headline font-bold">Zhang Jing 张静</h4>
+<p class="text-xs font-label text-primary uppercase tracking-widest mt-1">Lead Curator 首席策展人</p>
+</div>
+<p class="text-sm text-on-surface-variant/80 font-body leading-relaxed">
+                        Documenting the vanishing traditions and hidden landscapes of the Middle Kingdom for over a decade.
+                    </p>
+<button class="w-full bg-on-surface text-background py-3 rounded-lg font-label text-sm hover:bg-primary transition-all active:scale-95">Follow 关注</button>
+</div>
+<div class="flex justify-between pt-6 border-t border-outline-variant/20 text-center">
+<div>
+<p class="text-lg font-headline font-bold">42</p>
+<p class="text-[10px] font-label text-on-surface-variant uppercase">Posts</p>
+</div>
+<div>
+<p class="text-lg font-headline font-bold">12k</p>
+<p class="text-[10px] font-label text-on-surface-variant uppercase">Followers</p>
+</div>
+<div>
+<p class="text-lg font-headline font-bold">89</p>
+<p class="text-[10px] font-label text-on-surface-variant uppercase">Awards</p>
+</div>
+</div>
+</div>
+<!-- Ad/Callout Card -->
+<div class="bg-primary-container p-8 rounded-xl relative overflow-hidden group shadow-md">
+<div class="relative z-10 space-y-4">
+<h5 class="text-on-primary-container font-headline text-xl font-bold italic leading-tight">Join the Heritage Guild</h5>
+<p class="text-on-primary-container/80 text-xs font-body">Support the restoration of Sichuan's hidden temples and get exclusive access to expedition logs.</p>
+<a class="inline-block text-on-primary-container font-label text-xs border-b border-on-primary-container pb-0.5 hover:tracking-widest transition-all" href="#">Explore Membership →</a>
+</div>
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-9xl text-on-primary/10 rotate-12 group-hover:rotate-0 transition-transform duration-700" style="font-variation-settings: 'FILL' 1;">temple_buddhist</span>
+</div>
+</aside>
+</main>
+<!-- Related Posts -->
+<section class="bg-[#FAF8F5] py-20 px-8 border-t border-outline-variant/10">
+<div class="max-w-7xl mx-auto space-y-12">
+<div class="flex items-end justify-between">
+<div>
+<span class="text-xs font-label text-primary uppercase tracking-widest">Keep Exploring</span>
+<h2 class="text-4xl font-headline font-bold mt-2">More from the Living Scroll 更多精彩</h2>
+</div>
+<div class="flex gap-4">
+<button class="w-12 h-12 rounded-full border border-outline-variant flex items-center justify-center hover:bg-white transition-colors"><span class="material-symbols-outlined">west</span></button>
+<button class="w-12 h-12 rounded-full border border-outline-variant flex items-center justify-center hover:bg-white transition-colors"><span class="material-symbols-outlined">east</span></button>
+</div>
+</div>
+<div class="flex gap-8 overflow-x-auto pb-10 scrollbar-hide">
+<!-- Card 1 -->
+<div class="min-w-[320px] md:min-w-[400px] bg-white rounded-xl overflow-hidden shadow-sm group">
+<div class="h-56 overflow-hidden">
+<img alt="Related" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="vibrant blue lake surrounded by golden autumn larches and jagged mountain peaks" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6b9ZsHKu1BIniugHpS3-wRPypXJpdaUzCucxe10bzoDjnbEnY6k8rYc-2q0qlHAUhz_ug48f4vUOvk0g4r04ydxUNMkjHsZefLdcZ1xw7GSb2GFfrjc5uVEB2pdWPG-BzwrreF1LlXgJp8l-ZjwieWij3PyImGPzj5b54UkxxF2v7VfD0XPlX3o0fcEBPsOCqCwFAXi_B4EjmJn4n9KMnGhYVr4lhgAmYJ_L6vTkPQpXlw5os8CH6Y-rd0d4K1ldBaaJ1iBU0cOy5"/>
+</div>
+<div class="p-8 space-y-3">
+<span class="text-[10px] font-label text-secondary uppercase font-bold">Nature 景观</span>
+<h4 class="text-xl font-headline font-bold group-hover:text-primary transition-colors">The Emerald Mirrors of Jiuzhaigou | 九寨沟的翡翠之镜</h4>
+<p class="text-sm text-on-surface-variant line-clamp-2">Discover the spiritual significance of water in the high-altitude valleys of northern Sichuan.</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="min-w-[320px] md:min-w-[400px] bg-white rounded-xl overflow-hidden shadow-sm group">
+<div class="h-56 overflow-hidden">
+<img alt="Related" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="dramatic close up of a traditional chinese dragon sculpture on a temple wall with sunlight hitting its scales" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACgPFlZaopdzQCWPsVUxYQ5aRuP2rbJjPbpQ9AkIlK6bvyF6fGoCTPVO408SWvItT9XGVqleDVQvVNH4pSb7WMGGubVR1tzyT3l___hs1Ao8EjEf8V88UpnN3J1eZy3TiJNtktZ5pd6WK3vZTL7cMFOQumuVJJ5QjzL_0HqtcSA64Lr6dzWzUL5-rYg7Xq4qkwCLAWbT2ywoqzQbWMR057y_VFg_tACjEQwKphNxXjMkVpPbhvmWEBVY4DCZ-HAYzT8F5ugqoAiFy5"/>
+</div>
+<div class="p-8 space-y-3">
+<span class="text-[10px] font-label text-secondary uppercase font-bold">Art 艺术</span>
+<h4 class="text-xl font-headline font-bold group-hover:text-primary transition-colors">Ink and Influence: The Song Masters | 宋代大师墨宝</h4>
+<p class="text-sm text-on-surface-variant line-clamp-2">A deep dive into the brushwork that defined a thousand years of landscape painting.</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="min-w-[320px] md:min-w-[400px] bg-white rounded-xl overflow-hidden shadow-sm group">
+<div class="h-56 overflow-hidden">
+<img alt="Related" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="piles of loose tea leaves in wooden bowls with soft window light highlighting the textures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDX7dXE30amvB6_QXkFgLsFK8iht1ASgR9JqD150jtGbnla3TBgOjDKDbELbvxOntIXS_HlJSkLFTaVQy_tVKQLHF9rVHRnegaqPAO8DLcFFZ_sneOd9urUQA3j1bmgwcT5TQ6BNjxyp7jRUEQgegPH-k-bT9RyS_Uz90rCv26S7luXFo35Cam0rkKE7fGp58f50uaPBR0fHnkp2yp-Mrt975NjRVAcMokLFDLNiaeqeC5sOjtVvL2fF1O_v_U6SOFTk52SJtkYfXXY"/>
+</div>
+<div class="p-8 space-y-3">
+<span class="text-[10px] font-label text-secondary uppercase font-bold">Philosophy 哲学</span>
+<h4 class="text-xl font-headline font-bold group-hover:text-primary transition-colors">Tea and Zen: The Silent Ceremony | 茶与禅：无声的仪式</h4>
+<p class="text-sm text-on-surface-variant line-clamp-2">The ritual of tea as a meditative path in a modern world.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full pt-16 pb-8 px-8 bg-[#FAF8F5]">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 max-w-7xl mx-auto">
+<div class="col-span-1 md:col-span-1">
+<div class="text-xl font-serif text-[#9e2016] mb-4">ChinaVerse 中华宇宙</div>
+<p class="text-sm font-['Noto_Sans_SC'] text-[#1b1c1a]/40 leading-relaxed">
+                    Celebrating five thousand years of continuity and change. Exploring the intersection of tradition and the future.
+                </p>
+</div>
+<div>
+<h5 class="font-bold text-primary mb-6 font-label uppercase text-xs tracking-widest">Navigation 导航</h5>
+<ul class="space-y-4">
+<li><a class="text-[#1b1c1a]/40 hover:text-[#694d00] transition-colors font-['Noto_Sans_SC'] text-sm tracking-wide" href="#">Cultural Heritage 遗产</a></li>
+<li><a class="text-[#1b1c1a]/40 hover:text-[#694d00] transition-colors font-['Noto_Sans_SC'] text-sm tracking-wide" href="#">Bilibili 哔哩哔哩</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold text-primary mb-6 font-label uppercase text-xs tracking-widest">Connect 交流</h5>
+<ul class="space-y-4">
+<li><a class="text-[#1b1c1a]/40 hover:text-[#694d00] transition-colors font-['Noto_Sans_SC'] text-sm tracking-wide" href="#">Contact 联系</a></li>
+<li><a class="text-[#1b1c1a]/40 hover:text-[#694d00] transition-colors font-['Noto_Sans_SC'] text-sm tracking-wide" href="#">Privacy 隐私</a></li>
+</ul>
+</div>
+<div class="flex flex-col gap-4">
+<h5 class="font-bold text-primary mb-2 font-label uppercase text-xs tracking-widest">Newsletter 订阅</h5>
+<div class="relative">
+<input class="w-full bg-transparent border-b border-outline-variant/30 py-2 focus:border-primary transition-all font-body outline-none" placeholder="Email 地址" type="email"/>
+<button class="absolute right-0 top-2 material-symbols-outlined text-primary">arrow_forward</button>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto mt-16 pt-8 border-t border-outline-variant/10 text-center">
+<p class="text-xs font-['Noto_Sans_SC'] text-[#1b1c1a]/40">
+                © 2024 ChinaVerse 中华宇宙. 京ICP备12345678号. The Living Scroll Experience.
+            </p>
+</div>
+</footer>
+</body></html>

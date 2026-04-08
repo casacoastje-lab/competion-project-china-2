@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Explore Landmarks | ChinaVerse 中华宇宙</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&amp;family=Noto+Sans+SC:wght@300;400;500;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Work+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#b02d21",
+                        "on-tertiary-container": "#ffe8be",
+                        "secondary": "#006d3f",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1b1c1a",
+                        "on-surface": "#1b1c1a",
+                        "on-primary-fixed-variant": "#8e130c",
+                        "on-secondary-fixed": "#00210f",
+                        "on-surface-variant": "#59413d",
+                        "surface-container-low": "#FAF8F5",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e4e2df",
+                        "inverse-surface": "#30312f",
+                        "surface-container-high": "#eae8e5",
+                        "tertiary-fixed": "#ffdfa0",
+                        "primary": "#9e2016",
+                        "on-secondary-fixed-variant": "#00522e",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e4e2df",
+                        "tertiary": "#694d00",
+                        "background": "#FAF8F5",
+                        "tertiary-container": "#876400",
+                        "inverse-on-surface": "#f2f0ed",
+                        "inverse-primary": "#ffb4a9",
+                        "on-primary-container": "#ffe5e1",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#FAF8F5",
+                        "on-primary-fixed": "#410000",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#80d9a0",
+                        "surface": "#FAF8F5",
+                        "secondary-container": "#9bf6ba",
+                        "surface-container": "#efeeeb",
+                        "surface-dim": "#dbdad7",
+                        "on-secondary-container": "#0e7344",
+                        "outline": "#8d706c",
+                        "primary-fixed": "#ffdad5",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#e1bfb9",
+                        "tertiary-fixed-dim": "#f6be39",
+                        "secondary-fixed": "#9bf6ba",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#ffb4a9",
+                        "primary-container": "#c0392b",
+                        "on-tertiary-fixed": "#261a00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif SC"],
+                        "body": ["Work Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+        }
+        .grain-overlay {
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBoau0HH6541i5GZ21vwyKSOQNv7iZwxHhgYHJM96xmPiITErNhIGDenvMEqUzo4fMfCXB9a7DyFdhQ9Tot7vDdOdEZJ5ZMLFK__zONcvNP0LHyCSH4KrqisBZYnotlL_8O7o3jn5Q3_cMzA5k-ovA1x34EE2Y563fnf78vYaxdA125nSqaRC2FxyQLVlmnetwKF0WcDn6ewAKhTbQMopta2sYXFhFXiMcCM1pqsFMQ-fSILxaIqji65qU1K-GiFY0Lwhuy1oM1hyxw);
+            opacity: 0.05;
+            pointer-events: none
+        }
+        .scroll-hide::-webkit-scrollbar {
+            display: none
+        }
+        .scroll-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none
+        }
+    </style>
+</head>
+<body class="bg-[#FAF8F5] text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed relative overflow-hidden h-screen">
+<div class="fixed inset-0 grain-overlay z-50"></div>
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#FAF8F5]/80 backdrop-blur-md transition-all duration-300">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-[1920px] mx-auto">
+<div class="flex items-center gap-12">
+<a class="text-2xl font-serif font-bold text-[#9e2016] tracking-tighter italic" href="#">ChinaVerse 中华宇宙</a>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-[#1b1c1a]/60 font-medium hover:text-[#9e2016] transition-all duration-300" href="#">Explore 探索</a>
+<a class="text-[#1b1c1a]/60 font-medium hover:text-[#9e2016] transition-all duration-300" href="#">Blog 博客</a>
+<a class="text-[#1b1c1a]/60 font-medium hover:text-[#9e2016] transition-all duration-300" href="#">Learn 学习</a>
+<a class="text-[#9e2016] font-bold border-b-2 border-[#9e2016] pb-1" href="#">Map 地图</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center bg-surface-container rounded-full px-4 py-1.5 gap-2 border border-outline/10">
+<span class="material-symbols-outlined text-sm opacity-50">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm font-label w-48" placeholder="Search heritage..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-sm font-label text-on-surface-variant hover:text-primary transition-colors">EN | 中</button>
+<button class="px-5 py-1.5 bg-primary text-on-primary rounded-lg text-sm font-medium hover:bg-primary-container transition-all active:scale-95">Login 登录</button>
+<span class="material-symbols-outlined text-2xl text-on-surface cursor-pointer">account_circle</span>
+</div>
+</div>
+</div>
+</nav>
+<main class="flex h-screen pt-[72px]">
+<!-- Left Sidebar: Landmarks List -->
+<aside class="w-[420px] bg-[#FAF8F5] flex flex-col z-40 border-r border-outline-variant/10 shadow-xl shadow-black/5">
+<!-- Filter Header -->
+<div class="p-6 space-y-6">
+<header>
+<h1 class="font-headline text-3xl font-bold text-on-surface tracking-tight">Landmarks <span class="text-primary font-light italic">探索名胜</span></h1>
+<p class="text-on-surface-variant font-label text-sm mt-1">Discover the timeless heritage across the Middle Kingdom.</p>
+</header>
+<div class="grid grid-cols-2 gap-3">
+<div class="relative group">
+<select class="w-full appearance-none bg-surface-container-lowest border-b border-outline/30 focus:border-primary px-3 py-3 text-sm font-label transition-all focus:ring-0">
+<option>All Provinces</option>
+<option>Beijing</option>
+<option>Shaanxi</option>
+<option>Sichuan</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-xs pointer-events-none opacity-50">expand_more</span>
+</div>
+<div class="relative group">
+<select class="w-full appearance-none bg-surface-container-lowest border-b border-outline/30 focus:border-primary px-3 py-3 text-sm font-label transition-all focus:ring-0">
+<option>Category</option>
+<option>Palace</option>
+<option>Temple</option>
+<option>Nature</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-xs pointer-events-none opacity-50">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Scrollable List -->
+<div class="flex-1 overflow-y-auto scroll-hide px-6 pb-8 space-y-4">
+<!-- Active Item -->
+<div class="group bg-surface-container-lowest p-4 rounded-xl border-l-4 border-primary shadow-sm cursor-pointer transition-all hover:translate-x-1">
+<div class="flex gap-4">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all" data-alt="The Forbidden City in Beijing during sunset with dramatic golden light hitting the red walls and yellow glazed roof tiles" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKOPKeyoVuVgf4Ir_Iv8YejIUGcKVjMZ6ii3cf8hy-nIlNByAjIX700SSRVsimMipn2jlEFxNbWYbW1UYP6SAJMkez0WNKggoLl7uLIhFfqfy6hWtq7tvZzk8ouFGrH-ezINBgU1lMfItKmtqvXWkZ_UwgQXfUndJu_3ZQn8d7Mdr_KXJ4HtQriY02u9_irmgSyTZnxU36koVLQ7HcjgTL1ceP1LrAV6QMfIPAhTDluPqE5JUM-Fd_1dBNmaWHz1PmI8PDDeD0hcLL"/>
+</div>
+<div class="flex flex-col justify-center">
+<span class="text-[10px] uppercase font-label tracking-widest text-primary font-bold">Palace • Imperial</span>
+<h3 class="font-headline text-lg font-bold text-on-surface leading-tight mt-1">Forbidden City (故宫)</h3>
+<p class="text-on-surface-variant text-xs mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                Beijing, China
+                            </p>
+</div>
+</div>
+</div>
+<!-- List Items -->
+<div class="group bg-[#FAF8F5] p-4 rounded-xl hover:bg-surface-container-highest transition-all cursor-pointer">
+<div class="flex gap-4">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all" data-alt="Ancient Terracotta Warriors in Xi'an with soft museum lighting focusing on the intricate details of the clay soldiers" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9dibaqNby-xYttHHjizG2THauX763eWq6AfpMr9yD4O9DIX2n6cRusNi5T8SNsLEgo8Vv6_thN2fm3Gx2nDo9iB3ab0BDtLzMPVQqjY5JmBStGHY_oE1pizPw0_etx8zEiwBCTYh-Dk9U_cnhVeDEkuSpQfQVJTUd8ThSdJ5uEb9WOSJPTrhaXhv7v3xqoheEnUhePJfyheheGu5vAFxReDI5cf6_sidbHOKnJmrrufgk37RZFGTLhxbBSLBdyfxma-Cs3e1gsLLC"/>
+</div>
+<div class="flex flex-col justify-center">
+<span class="text-[10px] uppercase font-label tracking-widest text-on-surface-variant">Museum • Heritage</span>
+<h3 class="font-headline text-lg font-bold text-on-surface leading-tight mt-1">Terracotta Army (兵马俑)</h3>
+<p class="text-on-surface-variant text-xs mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                Xi'an, Shaanxi
+                            </p>
+</div>
+</div>
+</div>
+<div class="group bg-[#FAF8F5] p-4 rounded-xl hover:bg-surface-container-highest transition-all cursor-pointer">
+<div class="flex gap-4">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all" data-alt="The Temple of Heaven in Beijing showing the circular Hall of Prayer for Good Harvests against a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAL2K1nkyV2l4YvBvCzmOgmY4fCv192MmCMMWNqpkosgGEkuKCzY8DSXevd96Xg0HQT7ID8ZVRkTlZJiUZ9Aq0WAD8n_vrCrY8QxK8uXBhL-dfjqFZqYTDHmJ2XKBSsheRKB45KiPhYeNU7v4-ocDzoJxPKuxcDYrdymguFXgDeLX4C1co88W047zGNeKEki3OxWdsWoxdgs-bY76cxD1Pd27PhJBTHPcYTOCRt8CBQ3PFzqYFpWvPjeOkTWFsEEgbJQ0VPvBNQiiyC"/>
+</div>
+<div class="flex flex-col justify-center">
+<span class="text-[10px] uppercase font-label tracking-widest text-on-surface-variant">Temple • Sacred</span>
+<h3 class="font-headline text-lg font-bold text-on-surface leading-tight mt-1">Temple of Heaven (天坛)</h3>
+<p class="text-on-surface-variant text-xs mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                Beijing, China
+                            </p>
+</div>
+</div>
+</div>
+<!-- Skeleton Loading Items -->
+<div class="p-4 space-y-4 opacity-40">
+<div class="flex gap-4 animate-pulse">
+<div class="w-24 h-24 bg-surface-container-highest rounded-lg"></div>
+<div class="flex-1 space-y-2 py-2">
+<div class="h-3 bg-surface-container-highest rounded w-1/3"></div>
+<div class="h-5 bg-surface-container-highest rounded w-3/4"></div>
+<div class="h-3 bg-surface-container-highest rounded w-1/2"></div>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Map Interface -->
+<section class="flex-1 relative bg-[#FAF8F5]">
+<!-- Map Canvas Simulation -->
+<div class="absolute inset-0 bg-[#FAF8F5] overflow-hidden" data-location="China">
+<!-- Stylized Map Background -->
+<img class="w-full h-full object-cover mix-blend-multiply opacity-50 grayscale" data-alt="Simplified artistic map of China with rice paper texture, showing faint mountain ranges and major river outlines in ink-wash style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6_hUArZXdXN71wtDbq4qVNNeOoOoUGIrACEYhNj7kAsIS171ygy6uyPAweUBnUVF4OnkeEH6aphC7O_jh_QX2_ngfC0DZ2MdZ5uZ4-7ikKBPSoEjDa52PAeRgwDGzfEN7GflWZya93jQUCTxduRXRmA393jnD-isz6nX0loOND1CH1Qad6JtDjtbhm7W07uqYE2rfkR71qgiTABvbwW5V3JzNKxKZY4nP5KYyK3Nmj34Df6dQnyi1qTzX3237EhhMkVJswxw4vwrZ"/>
+<!-- Custom Landmark Pins -->
+<!-- Forbidden City Pin -->
+<div class="absolute top-1/4 left-2/3 -translate-x-1/2 -translate-y-1/2 group">
+<div class="relative cursor-pointer">
+<div class="absolute inset-0 bg-primary/20 rounded-full scale-[2] animate-ping"></div>
+<div class="w-10 h-10 bg-primary flex items-center justify-center rounded-t-full rounded-br-full rotate-45 shadow-lg border-2 border-tertiary-fixed shadow-primary/40">
+<span class="material-symbols-outlined text-on-primary text-xl -rotate-45" style="font-variation-settings: 'FILL' 1;">castle</span>
+</div>
+</div>
+<!-- Popup Card (Active) -->
+<div class="absolute bottom-12 left-1/2 -translate-x-1/2 w-72 bg-surface-container-lowest rounded-xl shadow-2xl overflow-hidden z-50 transform transition-all">
+<img class="w-full h-40 object-cover" data-alt="Wide shot of the Forbidden City outer court with marble bridges and massive red gates under a soft morning mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmOqshonI_Y0Yuob8mrbkjwMgluxDT5G5DZlNJKuFv3aaFGmw_EGFXzQMERtMv0w6KeAnVXrOCo1khmRrZCFsYAUf_BOLuGSW9vqmsuJgYhAV9X7YMc4OCSB9_Nu-aQorNs85sz7KOcNbvYCSjWk2k5ORA-9yr2lnen-3d_Dm2Frme_9UJ2ghxjDcYYSe7tzBRNEjTMPkXbuzsST-9KrM-WYLeLiYMWObxc3oNcX6zPdMVoqDGQQJFXeQ2M2rchRp0k10ZnkDd-lGZ"/>
+<div class="p-5">
+<h4 class="font-headline text-lg font-bold text-on-surface">Forbidden City (故宫)</h4>
+<p class="text-sm text-on-surface-variant font-body leading-relaxed mt-2 italic">The ultimate symbol of Imperial China, serving as the home of 24 emperors over 500 years.</p>
+<a class="mt-4 flex items-center justify-between text-primary font-bold text-sm group/btn" href="#">
+<span>View Details 详情</span>
+<span class="material-symbols-outlined transition-transform group-hover/btn:translate-x-1">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Secondary Pin -->
+<div class="absolute top-[45%] left-1/2 group">
+<div class="w-8 h-8 bg-on-surface-variant/40 flex items-center justify-center rounded-t-full rounded-br-full rotate-45 hover:bg-primary transition-all cursor-pointer">
+<span class="material-symbols-outlined text-white text-sm -rotate-45">museum</span>
+</div>
+</div>
+<!-- Tertiary Pin -->
+<div class="absolute top-[60%] left-[55%] group">
+<div class="w-8 h-8 bg-on-surface-variant/40 flex items-center justify-center rounded-t-full rounded-br-full rotate-45 hover:bg-primary transition-all cursor-pointer">
+<span class="material-symbols-outlined text-white text-sm -rotate-45">park</span>
+</div>
+</div>
+</div>
+<!-- Map Controls -->
+<div class="absolute bottom-8 right-8 flex flex-col gap-2">
+<button class="w-12 h-12 bg-surface-container-lowest text-on-surface rounded-lg shadow-lg flex items-center justify-center hover:bg-surface transition-all">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="w-12 h-12 bg-surface-container-lowest text-on-surface rounded-lg shadow-lg flex items-center justify-center hover:bg-surface transition-all">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<button class="w-12 h-12 bg-primary text-on-primary rounded-lg shadow-lg flex items-center justify-center hover:opacity-90 mt-4 transition-all active:scale-90">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+</div>
+<!-- Legend Overlay -->
+<div class="absolute top-8 right-8 bg-surface-container-lowest/90 backdrop-blur shadow-xl rounded-xl p-4 border border-outline-variant/20">
+<h5 class="text-[10px] font-label font-bold tracking-widest text-on-surface-variant uppercase mb-3">Map Legend</h5>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="text-xs font-medium">Palace &amp; Imperial</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="text-xs font-medium">Nature &amp; Mountains</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-tertiary"></div>
+<span class="text-xs font-medium">Temples &amp; Pagodas</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Simulation (Minimal for Map View) -->
+<footer class="fixed bottom-0 w-full z-40 bg-[#FAF8F5]/90 backdrop-blur-sm border-t border-outline-variant/10 md:hidden">
+<div class="flex justify-around items-center py-2 px-4">
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="text-[10px] font-label">Explore</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface/40">
+<span class="material-symbols-outlined">map</span>
+<span class="text-[10px] font-label">Map</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface/40">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="text-[10px] font-label">Learn</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface/40">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-label">Profile</span>
+</button>
+</div>
+</footer>
+</body></html>

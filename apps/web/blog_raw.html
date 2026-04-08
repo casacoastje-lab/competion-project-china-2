@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ChinaVerse 中华宇宙 - Blog 博客</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&amp;family=Noto+Sans+SC:wght@300;400;500;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Work+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#b02d21",
+                        "on-tertiary-container": "#ffe8be",
+                        "secondary": "#006d3f",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1b1c1a",
+                        "on-surface": "#1b1c1a",
+                        "on-primary-fixed-variant": "#8e130c",
+                        "on-secondary-fixed": "#00210f",
+                        "on-surface-variant": "#59413d",
+                        "surface-container-low": "#f5f3f0",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e4e2df",
+                        "inverse-surface": "#30312f",
+                        "surface-container-high": "#eae8e5",
+                        "tertiary-fixed": "#ffdfa0",
+                        "primary": "#9e2016",
+                        "on-secondary-fixed-variant": "#00522e",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e4e2df",
+                        "tertiary": "#694d00",
+                        "background": "#FAF8F5",
+                        "tertiary-container": "#876400",
+                        "inverse-on-surface": "#f2f0ed",
+                        "inverse-primary": "#ffb4a9",
+                        "on-primary-container": "#ffe5e1",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#FAF8F5",
+                        "on-primary-fixed": "#410000",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#80d9a0",
+                        "surface": "#FAF8F5",
+                        "secondary-container": "#9bf6ba",
+                        "surface-container": "#efeeeb",
+                        "surface-dim": "#dbdad7",
+                        "on-secondary-container": "#0e7344",
+                        "outline": "#8d706c",
+                        "primary-fixed": "#ffdad5",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#e1bfb9",
+                        "tertiary-fixed-dim": "#f6be39",
+                        "secondary-fixed": "#9bf6ba",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#ffb4a9",
+                        "primary-container": "#c0392b",
+                        "on-tertiary-fixed": "#261a00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif SC"],
+                        "body": ["Noto Sans SC"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #FAF8F5;
+            font-family: "Noto Sans SC", sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+        }
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed
+        }
+    </style>
+</head>
+<body class="text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed bg-[#FAF8F5]">
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#FAF8F5]/90 dark:bg-[#1b1c1a]/90 backdrop-blur-md border-b border-outline-variant/10">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-[1920px] mx-auto">
+<div class="flex items-center gap-8">
+<a class="text-2xl font-serif font-bold text-[#9e2016] tracking-tighter italic" href="#">ChinaVerse 中华宇宙</a>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-[#1b1c1a]/60 dark:text-[#fbf9f6]/60 font-medium hover:text-[#9e2016] transition-all duration-300" href="#">Explore 探索</a>
+<a class="text-[#9e2016] dark:text-[#c0392b] font-bold border-b-2 border-[#9e2016] pb-1 hover:text-[#9e2016] transition-all duration-300" href="#">Blog 博客</a>
+<a class="text-[#1b1c1a]/60 dark:text-[#fbf9f6]/60 font-medium hover:text-[#9e2016] transition-all duration-300" href="#">Learn 学习</a>
+<a class="text-[#1b1c1a]/60 dark:text-[#fbf9f6]/60 font-medium hover:text-[#9e2016] transition-all duration-300" href="#">Map 地图</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-xs font-label text-on-surface-variant hidden lg:block">EN | 中</span>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_circle</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg text-sm font-medium hover:opacity-90 active:scale-95 transition-all">Login 登录</button>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-24 px-8 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Sidebar -->
+<aside class="lg:col-span-3 space-y-12">
+<!-- Search -->
+<section class="space-y-4">
+<h3 class="text-primary font-headline text-xl font-bold italic tracking-tight">Search 搜索</h3>
+<div class="relative group">
+<input class="w-full bg-transparent border-b-2 border-outline/30 focus:border-primary outline-none py-3 px-2 font-body transition-all group-hover:border-outline/60" placeholder="Search the scrolls..." type="text"/>
+<span class="material-symbols-outlined absolute right-2 top-3 text-on-surface-variant">search</span>
+</div>
+</section>
+<!-- Categories -->
+<section class="space-y-6">
+<h3 class="text-primary font-headline text-xl font-bold italic tracking-tight">Categories 分类</h3>
+<nav class="flex flex-col gap-3">
+<a class="flex items-center justify-between group p-2 hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="text-on-surface/80 group-hover:text-primary font-medium">History 历史</span>
+<span class="text-xs bg-surface-container text-on-surface-variant px-2 py-1 rounded-full">24</span>
+</a>
+<a class="flex items-center justify-between group p-2 hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="text-on-surface/80 group-hover:text-primary font-medium">Language 语言</span>
+<span class="text-xs bg-surface-container text-on-surface-variant px-2 py-1 rounded-full">18</span>
+</a>
+<a class="flex items-center justify-between group p-2 hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="text-on-surface/80 group-hover:text-primary font-medium">Philosophy 哲学</span>
+<span class="text-xs bg-surface-container text-on-surface-variant px-2 py-1 rounded-full">12</span>
+</a>
+<a class="flex items-center justify-between group p-2 hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="text-on-surface/80 group-hover:text-primary font-medium">Art &amp; Design 艺术</span>
+<span class="text-xs bg-surface-container text-on-surface-variant px-2 py-1 rounded-full">31</span>
+</a>
+</nav>
+</section>
+<!-- Trending Now -->
+<section class="bg-[#f5f3f0] p-6 rounded-xl border-l-4 border-tertiary shadow-sm">
+<h3 class="text-tertiary font-headline text-xl font-bold italic tracking-tight mb-6">Trending Now 热门排行</h3>
+<div class="space-y-6">
+<div class="flex gap-4 items-start group cursor-pointer">
+<span class="text-3xl font-headline font-black text-tertiary/20 italic group-hover:text-tertiary/40 transition-colors">01</span>
+<div>
+<h4 class="text-sm font-bold leading-tight line-clamp-2">The Hidden Meanings of Song Dynasty Tea Ceremonies</h4>
+<span class="text-[10px] text-on-surface-variant font-label mt-1 block">4.2k Views</span>
+</div>
+</div>
+<div class="flex gap-4 items-start group cursor-pointer">
+<span class="text-3xl font-headline font-black text-tertiary/20 italic group-hover:text-tertiary/40 transition-colors">02</span>
+<div>
+<h4 class="text-sm font-bold leading-tight line-clamp-2">Silk Road Merchants and the Global Exchange</h4>
+<span class="text-[10px] text-on-surface-variant font-label mt-1 block">3.8k Views</span>
+</div>
+</div>
+<div class="flex gap-4 items-start group cursor-pointer">
+<span class="text-3xl font-headline font-black text-tertiary/20 italic group-hover:text-tertiary/40 transition-colors">03</span>
+<div>
+<h4 class="text-sm font-bold leading-tight line-clamp-2">Understanding Taoist Architecture</h4>
+<span class="text-[10px] text-on-surface-variant font-label mt-1 block">2.1k Views</span>
+</div>
+</div>
+</div>
+</section>
+</aside>
+<!-- Main Content -->
+<section class="lg:col-span-9 space-y-8">
+<!-- Grid Header -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-4 border-b border-outline-variant/20">
+<div>
+<h1 class="text-4xl md:text-5xl font-headline font-black text-on-surface tracking-tight">The Living Scroll <span class="text-primary italic">博客记录</span></h1>
+<p class="text-on-surface-variant mt-2 max-w-lg">Deep dives into the heritage, philosophy, and modern evolution of Chinese culture.</p>
+</div>
+<div class="flex items-center bg-surface-container-high p-1 rounded-full w-fit">
+<button class="px-4 py-1.5 rounded-full text-xs font-bold bg-surface-container-lowest shadow-sm">Bilingual 对照</button>
+<button class="px-4 py-1.5 rounded-full text-xs font-bold text-on-surface-variant hover:text-on-surface transition-colors">Single 简体</button>
+</div>
+</header>
+<!-- Editorial Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<article class="flex flex-col bg-surface-container-lowest group overflow-hidden rounded-xl shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Traditional Chinese architecture with red pillars and ornate rooftops during a soft orange sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBn38UhWk4O4hs8Cj36trgzn-FPj6OpjM3b8bzbitdsXuCZdHqufqTIzh5Ffh2RR718B0GdgOuUBlxDLn7c6f09TIu_t0dHo8gsM9b19ArCsTi14pqlXxMsPrVHcT2CqJf3ZGe_OqW7gzT7SKZIrUOuQfFGAq8SKbbr5WCjvPDf5t6CKIPcCXdAsshprflsajNoVCHC3dSABKOBTq9L9ekYU3FgL4ESOmGzMklGC_6kxh83pRVqXEm32afNR5EXoQ-uufj2Od9nuH0W"/>
+<span class="absolute top-4 left-4 bg-secondary text-on-secondary text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase">History 历史</span>
+<button class="absolute top-4 right-4 bg-white/20 backdrop-blur-md text-white p-2 rounded-full hover:bg-white hover:text-primary transition-all">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+</div>
+<div class="p-6 flex-grow flex flex-col justify-between">
+<div>
+<h2 class="text-xl font-headline font-bold leading-snug group-hover:text-primary transition-colors">Echoes of the Forbidden City <span class="block text-base font-normal text-on-surface/60 mt-1">紫禁城的历史回响</span></h2>
+<p class="text-sm text-on-surface-variant mt-3 line-clamp-3">Explore the architectural secrets and court intrigues that shaped centuries of imperial governance within the red walls.</p>
+</div>
+<div class="mt-6 flex items-center justify-between border-t border-outline-variant/15 pt-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="Portrait of a professional man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhGhUZ_1TCnzExiLRVCv5LDQULB3nHqgyzFeOf5ruk5U-sq1ouyPjoRmzWZ8DMZ-AGel-_MA4s853d4DBda2xjymN7MKasDK45YjJZ5n8JAwJ5B65PifxqY9WeaKj0GbQwLRz_csgIuouswDIyB2HJ7zrqhgGSUnU3dWvxLKtqaL71FiT9Puzq_DAub67MCB42D0_66Gvv5ahNEf9Ymoo8-XqfSCGVq5A6L0fGVwHYEl2e-ZwSWbdNFZdQHs6duCU45EYiPMEIcA-V"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold">Li Wei <span class="bg-primary/10 text-primary text-[8px] px-1.5 py-0.5 rounded ml-1 font-label">AUTHOR</span></span>
+<span class="text-[10px] text-on-surface-variant">8 min read</span>
+</div>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">thumb_up</span>
+<span class="text-[10px] font-bold">128</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="flex flex-col bg-surface-container-lowest group overflow-hidden rounded-xl shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Handcrafted Chinese calligraphy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuDJOJGucDI0AItgHKB6IgBvQ11LnNnjFDevA6rKDnBcD-qMrpgNrSWaP4PyufnRWS2tCqXaWYpPi48dxfZdmU8QV3pPU_y1XWJ_V8AsUDC_8dDq9IKOiBM17Xle4_MXYoeB26C-tjZbIuBMq0XPLLmtRAJfjopt7avB0mu6iJppHsmujuHj1wr_ZaZ5lQGHRwkdRzc_LqVET4HUKqEqXaIamd_S8AfLblkoGSg_eHSx3_BuorDU8N3Cdmn5TvOyOl5sSZGpKSwAyS"/>
+<span class="absolute top-4 left-4 bg-tertiary text-on-tertiary text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase">Language 语言</span>
+<button class="absolute top-4 right-4 bg-white/20 backdrop-blur-md text-white p-2 rounded-full hover:bg-white hover:text-primary transition-all">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+</div>
+<div class="p-6 flex-grow flex flex-col justify-between">
+<div>
+<h2 class="text-xl font-headline font-bold leading-snug group-hover:text-primary transition-colors">The Art of the Brush Stroke <span class="block text-base font-normal text-on-surface/60 mt-1">笔尖上的艺术灵魂</span></h2>
+<p class="text-sm text-on-surface-variant mt-3 line-clamp-3">Calligraphy is more than writing; it is a meditation. Learn how the four treasures of the study define visual poetry.</p>
+</div>
+<div class="mt-6 flex items-center justify-between border-t border-outline-variant/15 pt-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="Portrait of Zhang Ming" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvHd0xNLcMW-iYbR9pkIJXMRcMlc7FV5LqvOSnqO_WvWJjYxth-deIH4zcIhhsP6aIfU53F_8mr6L2PAZFLn_xQPBVpPtGBGO6XOffn2tA92mcBu2vXc1hbwWjM-GqC7qZ2Or5EZbVBeG1hXA6kzzZfVuLZK3ufK6Lyxsmd_6lA5xKwQUBOXlltaX_tZcKH1NwJ_KnauDptILP3eE2kmIiVvlABiiklb9jsJt49VEoxki76KFrdYOq00tGQzE0BrOTtADI3id_I6DF"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold">Zhang Ming <span class="bg-secondary/10 text-secondary text-[8px] px-1.5 py-0.5 rounded ml-1 font-label">SCHOLAR</span></span>
+<span class="text-[10px] text-on-surface-variant">12 min read</span>
+</div>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">thumb_up</span>
+<span class="text-[10px] font-bold">456</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 3 (Skeleton State) -->
+<article class="flex flex-col bg-surface-container-lowest rounded-xl shadow-sm opacity-60">
+<div class="h-56 bg-surface-container-high animate-pulse"></div>
+<div class="p-6 space-y-4">
+<div class="h-4 bg-surface-container-high rounded w-3/4 animate-pulse"></div>
+<div class="h-4 bg-surface-container-high rounded w-1/2 animate-pulse"></div>
+<div class="space-y-2 pt-4">
+<div class="h-2 bg-surface-container-high rounded animate-pulse"></div>
+<div class="h-2 bg-surface-container-high rounded animate-pulse"></div>
+<div class="h-2 bg-surface-container-high rounded w-5/6 animate-pulse"></div>
+</div>
+<div class="flex items-center gap-3 pt-6">
+<div class="w-8 h-8 rounded-full bg-surface-container-high animate-pulse"></div>
+<div class="h-4 bg-surface-container-high rounded w-24 animate-pulse"></div>
+</div>
+</div>
+</article>
+<!-- Card 4 -->
+<article class="flex flex-col bg-surface-container-lowest group overflow-hidden rounded-xl shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Mist-covered emerald green mountains" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPAnY9JpaAg1tPlfxbSpfM0f5bZy9UcAUiCrv09FtSQIvIOKm8sRSwYiSzEjOeGZwtiaO7QEAQox1LTtb707i2qzLUjECzNr4meMVIRV0RflPAB6elJGr7fL3xeBQy1yFAO8B3_uef2ptzlCq9L-KTTPyFQiarJXAOjxtK-fD_QzVH8KmnCoDBRHwvVp1KK37Unb5o6JpcFat3MS9aq_GLhL6xeiBcwJuMA4lIpgP7zPY5UhD48lSTPqbyGbvbeWJc2_VvLaCyMutX"/>
+<span class="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase">Philosophy 哲学</span>
+<button class="absolute top-4 right-4 bg-white/20 backdrop-blur-md text-white p-2 rounded-full hover:bg-white hover:text-primary transition-all">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+</div>
+<div class="p-6 flex-grow flex flex-col justify-between">
+<div>
+<h2 class="text-xl font-headline font-bold leading-snug group-hover:text-primary transition-colors">Mountains of the Mind <span class="block text-base font-normal text-on-surface/60 mt-1">内心深处的山水画卷</span></h2>
+<p class="text-sm text-on-surface-variant mt-3 line-clamp-3">How Taoist philosophy influenced centuries of landscape painting and the concept of 'Wu Wei' in nature.</p>
+</div>
+<div class="mt-6 flex items-center justify-between border-t border-outline-variant/15 pt-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="Portrait of Chen Long" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALeje6m0A6U9cedt0QPbewmcze1rvvbUIOmFxazdCBrBRnXkMMk-4xzPmnAuCx_iv0-zfnyp1cPWVx5UoscgQ5Tphlg9CCVzUirlzWtsgjpdyX2nY1dhHn1KDBiBWHk-U5QFXYPPBhvdnQ6tlBzPqZvoI6W7fz9agBdBFY3oQadme5i_TEpUjE8QPYufAVZx10Xb6HJ6JC0fSgdZfKA9T3eCkNxFeX5lE3XZqYgSXcABJZvHo1FY2rBC-KbvgqcdKCeqd73WLUWbaj"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold">Chen Long <span class="bg-tertiary/10 text-tertiary text-[8px] px-1.5 py-0.5 rounded ml-1 font-label">CURATOR</span></span>
+<span class="text-[10px] text-on-surface-variant">15 min read</span>
+</div>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">thumb_up</span>
+<span class="text-[10px] font-bold">312</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 5 -->
+<article class="flex flex-col bg-surface-container-lowest group overflow-hidden rounded-xl shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Red silk lanterns" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQiPYAMUMcJnZcM0gjuRgsXScMpxCfXWnERt_Hi9UUGffkawqpJ41T65vzU4tYSXcx9SH_sim07qmLyP7GqG35TPjhWoOa-CkJ9hbASwdb-IMWskJ1098rvRzgcctwwFDVrR36fH8mDB5wtdGV8VtYWv0EttwOO4waQDz9Z4fVX_pR7zrgL9_tMrITdZFyJNpJdMJ8tQcgHrjGORhFf8o6IugH2dOQ2G7D9vM4zhI48h5F4Rpyc7K7kRw2eR5Qs0_xt7QgGgyxehtt"/>
+<span class="absolute top-4 left-4 bg-secondary text-on-secondary text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase">Art 艺术</span>
+<button class="absolute top-4 right-4 bg-white/20 backdrop-blur-md text-white p-2 rounded-full hover:bg-white hover:text-primary transition-all">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+</div>
+<div class="p-6 flex-grow flex flex-col justify-between">
+<div>
+<h2 class="text-xl font-headline font-bold leading-snug group-hover:text-primary transition-colors">Festivals of Light <span class="block text-base font-normal text-on-surface/60 mt-1">光影交织的节日庆典</span></h2>
+<p class="text-sm text-on-surface-variant mt-3 line-clamp-3">From the Lantern Festival to modern light installations, discover how light symbolizes hope and reunion.</p>
+</div>
+<div class="mt-6 flex items-center justify-between border-t border-outline-variant/15 pt-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="Portrait of Sofia Lin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWJJQpzOoJefHn5gdfUfR2ddfC9i62ZcnyRcGKO1jFAF7KUUM7X7oHu9FLZ6ILDhEzK8pG-XoEvv_5CBGJCXoUpqtoqa9AxJCpdJ5ld7wIFNUNuyIQ0TB_abQvnh4fqcgDXtxinLl0FNuUmfHCyqXwAM8Bm3wwXe_pqVXJXpcEWcBR2FDZjACIJ2DcZQMyNMW095syMkVAq8Zj2Q8BDB7gnXZTqcebORk8qK6lhz5g6aZ7Z2emGaQmdIL0oel3oJkEIJVXQwavtdua"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold">Sofia Lin <span class="bg-primary/10 text-primary text-[8px] px-1.5 py-0.5 rounded ml-1 font-label">BLOGGER</span></span>
+<span class="text-[10px] text-on-surface-variant">6 min read</span>
+</div>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">thumb_up</span>
+<span class="text-[10px] font-bold">89</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 6 -->
+<article class="flex flex-col bg-surface-container-lowest group overflow-hidden rounded-xl shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Exquisite blue and white Ming dynasty porcelain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApjG2C7NmQd2L78_qMnjKZGorBeSsIMtgFkJnmtzKOd48Teyt4kAuV7jpbyzHNW_fuTwJRIt_R9y7JFtcLJytoYSRjBOK3JdLcfur_Wq01-JtvGeImckwb8eC79sRLmiLtWTtL2p15InF3DavmWhFhMnPLoEv1dl0sleKsS2inE78feSdQMdqqhV-7jVygtXHxyFiSpHlFFRiEd--WMCJkiUgZXuRtsLm_bqCSdz1PmNw32RSPewQI8CQWW9jTaPmlbqN47xyhsi0B"/>
+<span class="absolute top-4 left-4 bg-tertiary text-on-tertiary text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase">Heritage 遗产</span>
+<button class="absolute top-4 right-4 bg-white/20 backdrop-blur-md text-white p-2 rounded-full hover:bg-white hover:text-primary transition-all">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+</div>
+<div class="p-6 flex-grow flex flex-col justify-between">
+<div>
+<h2 class="text-xl font-headline font-bold leading-snug group-hover:text-primary transition-colors">The Porcelain Path <span class="block text-base font-normal text-on-surface/60 mt-1">丝路上的瓷器传奇</span></h2>
+<p class="text-sm text-on-surface-variant mt-3 line-clamp-3">Tracing the global impact of Jingdezhen's craftsmanship and the evolution of ceramic aesthetics.</p>
+</div>
+<div class="mt-6 flex items-center justify-between border-t border-outline-variant/15 pt-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="Portrait of Dr. Wang" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoovcEDBSwljEM8hpAYaTzy625OLdijY1MKnsSGm8gHwU13rJRSfFjNJ9b9HiPwhnPwSAc7GO2HxQ67Qt9zV3JxeMfgmkL7NaKPx9iXnqC1cxWpAshad4k_0gLpOhWl4ijkq0a8rIdxR3BbpSKO8Ij4KFh-dlrqUtvhrSMNMWSKOQWVOwmoQGJggbc6pBCkyP1HkJBXUQlxL0BCbPbsIze8AJDizzwep6_zNhnFaR_fV0G0TRgYOtbxgBtHJImVc5SXQxYcSwHJJYI"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold">Dr. Wang <span class="bg-secondary/10 text-secondary text-[8px] px-1.5 py-0.5 rounded ml-1 font-label">EXPERT</span></span>
+<span class="text-[10px] text-on-surface-variant">20 min read</span>
+</div>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">thumb_up</span>
+<span class="text-[10px] font-bold">2.1k</span>
+</div>
+</div>
+</div>
+</article>
+</div>
+<!-- Pagination -->
+<div class="flex justify-center items-center gap-4 py-12">
+<button class="p-2 rounded-full border border-outline-variant/30 hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-full bg-primary text-on-primary font-bold">1</button>
+<button class="w-10 h-10 rounded-full hover:bg-surface-container-low font-bold transition-colors">2</button>
+<button class="w-10 h-10 rounded-full hover:bg-surface-container-low font-bold transition-colors">3</button>
+<span class="flex items-center px-2">...</span>
+<button class="w-10 h-10 rounded-full hover:bg-surface-container-low font-bold transition-colors">12</button>
+</div>
+<button class="p-2 rounded-full border border-outline-variant/30 hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#FAF8F5] border-t border-outline-variant/10 w-full pt-16 pb-8 px-8">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 max-w-7xl mx-auto">
+<div class="md:col-span-1">
+<div class="text-xl font-serif text-[#9e2016] mb-4 font-bold italic">ChinaVerse 中华宇宙</div>
+<p class="text-[#1b1c1a]/40 dark:text-[#fbf9f6]/40 text-sm leading-relaxed">Bringing five thousand years of history to the digital frontier. Curating cultural excellence for a global audience.</p>
+</div>
+<div>
+<h4 class="font-bold text-[#9e2016] dark:text-[#c0392b] mb-4 text-sm tracking-widest uppercase">Quick Links</h4>
+<nav class="flex flex-col gap-3 font-['Noto_Sans_SC'] text-sm">
+<a class="text-[#1b1c1a]/40 dark:text-[#fbf9f6]/40 hover:text-[#694d00] transition-colors" href="#">Cultural Heritage 遗产</a>
+<a class="text-[#1b1c1a]/40 dark:text-[#fbf9f6]/40 hover:text-[#694d00] transition-colors" href="#">Bilibili 哔哩哔哩</a>
+<a class="text-[#1b1c1a]/40 dark:text-[#fbf9f6]/40 hover:text-[#694d00] transition-colors" href="#">Privacy 隐私</a>
+<a class="text-[#1b1c1a]/40 dark:text-[#fbf9f6]/40 hover:text-[#694d00] transition-colors" href="#">Contact 联系</a>
+</nav>
+</div>
+<div>
+<h4 class="font-bold text-[#9e2016] dark:text-[#c0392b] mb-4 text-sm tracking-widest uppercase">Community</h4>
+<nav class="flex flex-col gap-3 font-['Noto_Sans_SC'] text-sm">
+<a class="text-[#1b1c1a]/40 dark:text-[#fbf9f6]/40 hover:text-[#694d00] transition-colors" href="#">Become a Contributor</a>
+<a class="text-[#1b1c1a]/40 dark:text-[#fbf9f6]/40 hover:text-[#694d00] transition-colors" href="#">Scholars Circle</a>
+<a class="text-[#1b1c1a]/40 dark:text-[#fbf9f6]/40 hover:text-[#694d00] transition-colors" href="#">Newsletter Sub</a>
+</nav>
+</div>
+<div>
+<h4 class="font-bold text-[#9e2016] dark:text-[#c0392b] mb-4 text-sm tracking-widest uppercase">Newsletter</h4>
+<div class="flex flex-col gap-4">
+<input class="bg-transparent border-b border-outline/30 focus:border-primary outline-none py-2 text-sm font-body" placeholder="Your email address" type="email"/>
+<button class="bg-[#9e2016] text-white py-2 px-4 rounded text-xs font-bold tracking-widest hover:opacity-90 active:opacity-70 transition-all uppercase">Subscribe</button>
+</div>
+</div>
+</div>
+<div class="mt-16 pt-8 border-t border-outline-variant/10 text-center">
+<p class="text-[#1b1c1a]/40 dark:text-[#fbf9f6]/40 font-['Noto_Sans_SC'] text-xs tracking-wide">
+                © 2024 ChinaVerse 中华宇宙. 京ICP备12345678号. The Living Scroll Experience.
+            </p>
+</div>
+</footer>
+</body></html>
