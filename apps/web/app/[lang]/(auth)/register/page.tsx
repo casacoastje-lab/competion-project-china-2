@@ -47,38 +47,50 @@ export default function RegisterPage({ params }: { params: Promise<{ lang: strin
     try {
       const supabase = createClient();
       
-      const { data, error: signUpError } = await supabase.auth.signUp({
+      // First try to sign in - user might already exist
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
-        options: {
-          data: {
-            username,
-            display_name: username,
-          },
-        },
       });
 
-      if (signUpError) {
-        console.log('Signup error:', signUpError.message);
-        setError(isEn ? 'Registration failed: ' + signUpError.message : '注册失败：' + signUpError.message);
+      if (!signInError && signInData.user) {
+        // User already exists and logged in successfully
+        router.push(`/${lang}/dashboard`);
+        router.refresh();
         return;
       }
 
-      // Auto sign in after registration
-      if (data.user) {
-        const { error: signInError } = await supabase.auth.signInWithPassword({
+      // If sign in failed with invalid credentials, try to sign up
+      if (signInError && signInError.message.includes('Invalid login credentials')) {
+        const { data, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            data: {
+              username,
+              display_name: username,
+            },
+          },
         });
 
-        if (!signInError) {
+        if (signUpError) {
+          if (signUpError.message.includes('Signups not allowed') || signUpError.message.includes('signups not allowed')) {
+            setError(isEn ? 'Registration is currently disabled. Please contact the administrator.' : '注册已禁用。请联系管理员。');
+          } else {
+            setError(isEn ? 'Registration failed: ' + signUpError.message : '注册失败：' + signUpError.message);
+          }
+          return;
+        }
+
+        if (data.user) {
           router.push(`/${lang}/dashboard`);
           router.refresh();
           return;
         }
+      } else {
+        // Other sign in error
+        setError(isEn ? 'Registration failed: ' + signInError.message : '注册失败：' + signInError.message);
       }
-
-      setSuccess(true);
     } catch (err) {
       console.log('Registration error:', err);
       setError(isEn ? 'Registration failed. Please try again.' : '注册失败，请重试。');
