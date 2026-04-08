@@ -35,13 +35,17 @@ function LoginForm({ lang }: { lang: string }) {
     try {
       const supabase = createClient();
       
-      const { error: authError } = await supabase.auth.signInWithPassword({
+      const { error: authError, data } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (authError) {
-        setError(isEn ? 'Invalid email or password.' : '邮箱或密码错误。');
+        if (authError.message.includes('Email not confirmed')) {
+          setError(isEn ? 'Please check your email and confirm your account first.' : '请查收邮件并先确认您的账户。');
+        } else {
+          setError(isEn ? 'Invalid email or password.' : '邮箱或密码错误。');
+        }
         return;
       }
 
